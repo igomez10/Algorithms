@@ -1,34 +1,43 @@
 package main
 
 import "fmt"
-import "time"
 
 func main() {
-	arr := []int{1, 2, 3, 10, 45, 67, 89, 100, 125, 167, 200, 245, 255, 267, 290, 340, 350, 500, 900, 9000, 100000, 10000000}
+	arr := []int{0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100, 200, 300, 400, 555, 600, 700, 800, 900, 1000}
+	searchedElement := 1005
 
-	fmt.Println(binarySearch(&arr, 0, len(arr)-1, 255))
+	//testing all the values in the array
+	for i := range arr {
+		if !isInArray(arr, arr[i]) {
+			fmt.Println("Not found:", arr[i])
+		}
+	}
+
+	fmt.Println(isInArray(arr, searchedElement))
 }
 
-func binarySearch(arr *[]int, lo, hi, searched int) bool {
+func isInArray(arr []int, searchedElement int) bool {
 
-	time.Sleep(1 * time.Second)
+	lo := 0
+	hi := len(arr) - 1
 
-	fmt.Printf("From %d (%d) to %d (%d) \n", lo, (*arr)[lo], hi, (*arr)[hi])
-	if hi == lo || lo > hi {
-		return false
-	}
-
+	//variable to be returned in the end, zero value is false
 	var answer bool
-	middleIndex := (hi + lo) / 2
-	pivotElement := (*arr)[middleIndex]
 
-	if pivotElement == searched {
-		answer = true
-	} else if pivotElement > searched {
-		answer = binarySearch(arr, lo, middleIndex, searched)
-	} else {
-		answer = binarySearch(arr, middleIndex, hi, searched)
+	//it's ok if the indexes are equal, after the next cycle, lo|hi will move +-1, preventing constant values as lo==hi
+	for lo <= hi {
+		middle := (hi + lo) / 2
+		pivotElement := arr[middle]
+		if pivotElement == searchedElement {
+			answer = true
+			break
+		} else if pivotElement < searchedElement {
+			lo = middle + 1 // why include the middle element if we already know that it's not our searchedElement??, skip it with a +1
+		} else { // same here
+			hi = middle - 1 // same here
+		}
 	}
+
 	return answer
 
 }
