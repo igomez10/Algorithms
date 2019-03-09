@@ -25,13 +25,15 @@ func sort(arr *[]int, lo, hi int) {
 	sort(arr, finalIndexForFirstE+1, hi)
 }
 
+/*
+partition return an array where arr[0] is in its final position
+decrease hi until hits a smaller num (k < arr[0])
+increase lo until hits a bigger num (k > arr[0])
+switch arr[lo] with arr[hi]
+continue decreasing hi and increasing lo until lo >= hi
+when this happens, switch arr[hi] with arr[0], the latter will be in its final position
+*/
 func partition(arr *[]int, lo, hi int) int {
-
-	//decrease hi until hits a smaller num (k < arr[0])
-	//increase lo until hits a bigger num (k > arr[0]
-	// switch arr[lo] with arr[hi]
-	// continue decreasing hi and increasing lo until lo >= hi
-	// when this happens, switch arr[hi] with arr[0], the latter will be in its final position
 
 	pivot := (*arr)[lo]
 	smallPointer := lo + 1
