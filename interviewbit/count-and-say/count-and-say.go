@@ -3,31 +3,36 @@ package main
 import (
 	"fmt"
 	"strconv"
-	"strings"
 )
 
 func main() {
-	target := 1211
-	fmt.Println(countAndSay(target))
+	fmt.Println(countAndSay(2))
 }
 
-func countAndSay(soriginal int) string {
-	s := strconv.Itoa(soriginal)
-	newString := strings.Builder{}
+func countAndSay(target int) string {
+	res := "1"
+	for i := 0; i < target-1; i++ {
+		res = generateNextSequence(res)
+	}
+	return res
+}
+
+func generateNextSequence(s string) string {
+	newString := ""
 	counter := 1
 	currNumber := s[0]
 	for i := 1; i < len(s); i++ {
 		if currNumber == s[i] {
 			counter++
 		} else {
-			newString.WriteString(strconv.Itoa(counter))
-			newString.WriteByte(currNumber)
+			newString += strconv.Itoa(counter)
+			newString += string(currNumber)
 			currNumber = s[i]
 			counter = 1
 		}
 	}
-	newString.WriteString(strconv.Itoa(counter))
-	newString.WriteByte(currNumber)
+	newString += strconv.Itoa(counter)
+	newString += string(currNumber)
 
-	return newString.String()
+	return newString
 }
