@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 func main() {
@@ -18,21 +19,21 @@ func countAndSay(target int) string {
 }
 
 func generateNextSequence(s string) string {
-	newString := ""
+	newString := strings.Builder{}
 	counter := 1
 	currNumber := s[0]
 	for i := 1; i < len(s); i++ {
 		if currNumber == s[i] {
 			counter++
 		} else {
-			newString += strconv.Itoa(counter)
-			newString += string(currNumber)
+			newString.WriteString(strconv.Itoa(counter))
+			newString.WriteString(string(currNumber))
 			currNumber = s[i]
 			counter = 1
 		}
 	}
-	newString += strconv.Itoa(counter)
-	newString += string(currNumber)
+	newString.WriteString(strconv.Itoa(counter))
+	newString.WriteString(string(currNumber))
 
-	return newString
+	return newString.String()
 }
