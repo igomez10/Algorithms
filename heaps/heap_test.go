@@ -30,6 +30,10 @@ func TestIsSorted(t *testing.T) {
 	}
 }
 
+func TestHeapSort(t *testing.T) {
+
+}
+
 func TestInsert(t *testing.T) {
 	aHeap := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	initialLength := len(aHeap)

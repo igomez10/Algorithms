@@ -13,8 +13,10 @@ new root after the swap may violate max heap property but its children are max h
 */
 
 func main() {
-	values := []int{-1, 1, 3, 4, 5, 6, 7, 8, 9}
-	deleteMin(&values)
+	values := []int{-1, 9, 7, 6, 5, 4, 3, 2, 1}
+	printHeap(values)
+	heapSort(&values)
+	fmt.Println()
 	printHeap(values)
 	//	fmt.Println("Initial Array:")
 	//	printHeap(values)
@@ -26,6 +28,20 @@ func main() {
 }
 
 func heapSort(arr *[]int) {
+	var i int
+	for i = len(*arr) / 2; i >= 1; i-- {
+		fmt.Println("sinking", (*arr)[i])
+		sink(arr, i)
+	}
+	fmt.Println(arr)
+	//	for i := 1; i < len(*arr); i++ {
+	//		insert(&newHeap, (*arr)[i])
+	//	}
+	//	sortedHead := []int{-1}
+	//	for i := 1; i < len(*arr); i++ {
+	//		sortedHead = append(sortedHead, newHeap[1])
+	//		deleteMin(&newHeap)
+	//	}
 
 }
 
@@ -41,6 +57,9 @@ func deleteMin(arr *[]int) {
 func printHeap(heap []int) {
 	arr := heap[1:]
 	levelsInArr := int(math.Ceil(math.Log2(float64(len(arr)))))
+	if len(heap) <= 3 {
+		levelsInArr = 1
+	}
 	for i := 0; i <= levelsInArr; i++ {
 		var row []int
 		index := float64(i)
@@ -52,9 +71,11 @@ func printHeap(heap []int) {
 			row = arr
 		}
 
-		initalSpace := strings.Repeat(" ", (levelsInArr*levelsInArr)/2-i)
+		initalSpace := strings.Repeat(" ", levelsInArr-i)
 		if len(row) > 0 {
 			fmt.Println(initalSpace, row)
+		} else {
+			break
 		}
 	}
 }
@@ -127,7 +148,5 @@ func swim(arr *[]int, indexOfValue int) {
 
 func insert(arr *[]int, newValue int) {
 	*arr = append(*arr, newValue)
-	if ok := isSorted(*arr); !ok {
-		swim(arr, len(*arr)-1)
-	}
+	swim(arr, len(*arr)-1)
 }
