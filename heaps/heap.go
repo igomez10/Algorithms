@@ -30,8 +30,11 @@ func heapSort(arr *[]int) {
 }
 
 func deleteMin(arr *[]int) {
+	// overwrite last element to first position in heap
 	(*arr)[1] = (*arr)[len(*arr)-1]
+	// remove last element
 	*arr = (*arr)[:len(*arr)-1]
+	// move first element to its final position
 	sink(arr, 1)
 }
 
