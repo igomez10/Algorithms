@@ -9,7 +9,7 @@ type WeatherStation struct {
 }
 
 // RegisterObserver adds an observer to its array of observers
-func (w WeatherStation) RegisterObserver(obs Observer) {
+func (w *WeatherStation) RegisterObserver(obs Observer) {
 	w.Observers = append(w.Observers, obs)
 }
 
@@ -25,6 +25,14 @@ func (w WeatherStation) RemoveObserver(obs Observer) {
 // NotifyObservers traverses the list of observers notifying them on the change
 func (w WeatherStation) NotifyObservers() {
 	for i := 0; i < len(w.Observers); i++ {
-		w.Observers[i].Update()
+		w.Observers[i].Update(w.Temperature, w.Pressure, w.Humidity)
 	}
+}
+
+func (w WeatherStation) SetWeather(temp float64, pressure float64, humid float64) {
+	w.Temperature = temp
+	w.Pressure = pressure
+	w.Humidity = humid
+	w.NotifyObservers()
+
 }
