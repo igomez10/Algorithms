@@ -25,5 +25,8 @@ func stringCompression(s string) string {
 	builder.WriteByte(currChar)
 	frequency := strconv.Itoa(currCounter)
 	builder.WriteString(frequency)
+	if builder.Len() > len(s) {
+		return s
+	}
 	return builder.String()
 }

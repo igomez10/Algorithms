@@ -7,7 +7,8 @@ import (
 func TestStringCompression(t *testing.T) {
 	first := []string{"aaabbc", "a3b2c1"}
 	second := []string{"abbcccddddeeeee", "a1b2c3d4e5"}
-	cases := [][]string{first, second}
+	third := []string{"abcdefghi", "abcdefghi"}
+	cases := [][]string{first, second, third}
 
 	for i := range cases {
 
