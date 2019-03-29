@@ -15,10 +15,12 @@ func countAndSay(target int) string {
 	for i := 0; i < target-1; i++ {
 		res = generateNextSequence(res)
 	}
+
 	return res
 }
 
 func generateNextSequence(s string) string {
+
 	newString := strings.Builder{}
 	counter := 1
 	currNumber := s[0]

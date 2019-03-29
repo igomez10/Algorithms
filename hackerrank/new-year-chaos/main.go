@@ -1,7 +1,6 @@
 package main
 
 import "fmt"
-import "math"
 
 // 1,2,3,4,5
 // 2,1,3,4,5
@@ -59,16 +58,13 @@ func countBribes(arr []int32) (int, bool) {
 func countBribesSolution(arr []int32) (int, bool) {
 	isPossible := true
 	counter := 0
-	for i := len(arr) - 1; i >= 0; i-- {
+	for i := 0; i < len(arr); i++ {
 		if int(arr[i])-(i+1) > 2 {
 			isPossible = false
 			break
 		}
-		j := int(math.Max(0, float64(arr[i]-2)))
-		for ; j < 1; j++ {
-			if arr[j] > arr[i] {
-				counter++
-			}
+		if int(arr[i])-1 > i {
+			counter += int(arr[i]) - 1 - i
 		}
 	}
 	return counter, isPossible

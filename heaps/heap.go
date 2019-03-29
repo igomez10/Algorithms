@@ -92,31 +92,118 @@ func isSorted(arr []int) bool {
 	return isSorted
 }
 
-// sink takes the given index and moves
-func sink(arr *[]int, indexOfValue int) int {
-	// if a value is in last row do nothing
-	i := indexOfValue
-	isALeaf := i >= len(*arr)/2
-	isInFinalPosition := isALeaf || (((*arr)[i] <= (*arr)[i*2]) && (*arr)[i] <= (*arr)[i*2+1])
-	// the element is in its final position if its a leaf or if its smaller than both childs
-	//isInFinalPosition := isALeaf || (((*arr)[i] <= (*arr)[i*2]) && (*arr)[i] <= (*arr)[i*2+1])
-	for !isInFinalPosition {
-		left := (*arr)[i*2]
-		right := (*arr)[i*2+1]
-		var smallest int
-		if right > left {
-			smallest = i * 2
-		} else {
-			smallest = i*2 + 1
-		}
-		(*arr)[i], (*arr)[smallest] = (*arr)[smallest], (*arr)[i]
-		i = smallest
-		isALeaf = i >= len(*arr)/2
-		isInFinalPosition = isALeaf || (((*arr)[i] <= (*arr)[i*2]) && (*arr)[i] <= (*arr)[i*2+1])
+func isALeaf(arr *[]int, position int) bool {
+	if len(*arr) < position*2 {
+		return true
+	}
+	return false
+}
+
+func hasRightChild(arr *[]int, position int) bool {
+	if len(*arr) < position*2+1 {
+		return true
+	}
+	return false
+}
+
+func isSmallerThanChilds(arr *[]int, position int) bool {
+	if isALeaf(arr, position) {
+		return true
 	}
 
-	return i
+	var answer bool
+	//compare with left child, then with right child
+	if (*arr)[position*2] >= (*arr)[position] {
+		// cannot be swapped with left child
+		// compare with right child
+		if hasRightChild(arr, position) {
+			if (*arr)[position*2+1] >= (*arr)[position] {
+				// is smaller than left AND right
+				answer = true
+			}
+			// is smaller than left but bigger than right
+			answer = false
+		} else {
+			// is smaller than left, doesnt have right
+			answer = true
+		}
+	} else {
+		// bigger than left
+		answer = false
+	}
+
+	return answer
 }
+
+func sink(arr *[]int, position int) {
+	current := position
+	for {
+		//replace left and right values in function
+		left := current * 2
+		right := current*2 + 1
+		if isALeaf(arr, current) {
+			break
+		}
+		var canSwapLeft bool
+		var canSwapRight bool
+
+		if (*arr)[current*2] < (*arr)[current] {
+			// left child is smaller
+			canSwapLeft = true
+		}
+
+		// check is element has right child
+		if hasRightChild(arr, current) {
+			if (*arr)[right] < (*arr)[current] {
+				// right child is smaller
+				canSwapRight = true
+			}
+		}
+		if canSwapLeft && canSwapRight {
+			// left and right child are smaller than current position
+			// select the smallest to swap with current
+			var smaller int
+			if (*arr)[left] < (*arr)[right] {
+				smaller = (*arr)[left]
+			} else {
+				smaller = (*arr)[right]
+			}
+			(*arr)[current], (*arr)[smaller] = (*arr)[smaller], (*arr)[current]
+		} else if canSwapLeft {
+			(*arr)[current], (*arr)[left] = (*arr)[left], (*arr)[current]
+			current = left
+		} else if canSwapRight {
+			(*arr)[current], (*arr)[right] = (*arr)[right], (*arr)[current]
+			current = right
+		} else {
+			break
+		}
+	}
+}
+
+// sink takes the given index and moves
+//func sink(arr *[]int, indexOfValue int) int {
+//	// if a value is in last row do nothing
+//	i := indexOfValue
+//	// the element is in its final position if its a leaf or if its smaller than both childs
+//	isInFinalPosition := isALeaf(arr, i) || (((*arr)[i] <= (*arr)[i*2]) && (*arr)[i] <= (*arr)[i*2+1])
+//	for !isInFinalPosition {
+//		left := (*arr)[i*2]
+//		right := (*arr)[i*2+1]
+//		var smallest int
+//		if right > left {
+//			smallest = i * 2
+//		} else {
+//			smallest = i*2 + 1
+//		}
+//		(*arr)[i], (*arr)[smallest] = (*arr)[smallest], (*arr)[i]
+//		i = smallest
+//
+//		isInFinalPosition = isALeaf(arr, i) || (((*arr)[i] <= (*arr)[i*2]) && (*arr)[i] <= (*arr)[i*2+1])
+//	}
+//
+//	return i
+//}
 
 func isInHeap(arr []int, elementToFind int) bool {
 	i := 0

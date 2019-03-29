@@ -41,3 +41,39 @@ func isOneAway(A, B string) bool {
 	}
 	return true
 }
+
+func customIsOneAway(A, B string) bool {
+	if math.Abs(float64(len(A)-len(B))) > 1 {
+		return false
+	}
+
+	var bigger string
+	var smaller string
+	if len(A) > len(B) {
+		bigger = A
+		smaller = B
+	} else {
+		bigger = B
+		smaller = A
+	}
+
+	var foundDifference bool
+	bigPointer := 0
+	smallPointer := 0
+	for smallPointer < len(smaller) && bigPointer < len(bigger) {
+		if bigger[bigPointer] != smaller[smallPointer] {
+			if foundDifference {
+				return false
+			}
+			foundDifference = true
+			if len(bigger) == len(smaller) {
+				smallPointer++
+			}
+		} else {
+			smallPointer++
+		}
+
+		bigPointer++
+	}
+	return true
+}

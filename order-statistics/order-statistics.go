@@ -27,28 +27,24 @@ if the final indfex for the value is smaller than m then our value is to the rig
 
 **/
 func main() {
-	arr := []int{8, 11, 6, 5, 4, 10, 2, 3, 1, 9}
-	nthNumber := 3
+	arr := []int{73, 90, 85, 58, 69, 77, 90, 85, 18, 35}
+	nthNumber := 0
 	lo, hi := 0, len(arr)-1
-	finalIndexForFirst := partition(&arr, lo, hi)
-	fmt.Println(finalIndexForFirst)
 	var answer int
 	for {
+		finalIndexForFirst := partition(&arr, lo, hi)
+		fmt.Println(arr)
 		if finalIndexForFirst < nthNumber {
 			lo = finalIndexForFirst + 1
-			finalIndexForFirst = partition(&arr, lo, hi)
 		} else if finalIndexForFirst > nthNumber {
 			hi = finalIndexForFirst - 1
-			finalIndexForFirst = partition(&arr, lo, hi)
 		} else {
 			answer = arr[finalIndexForFirst]
 			break
 		}
-		fmt.Println(finalIndexForFirst)
 	}
-	fmt.Println(finalIndexForFirst)
-	fmt.Printf("The %d smallest number is %d", nthNumber, answer)
-	fmt.Printf(" %+v", arr)
+	fmt.Printf("The %d smallest number is %d\n", nthNumber, answer)
+	fmt.Printf(" %+v\n", arr)
 }
 
 //quickselect modifies the inital array where the first element
@@ -60,26 +56,16 @@ func main() {
 // when both stop, switch a[i] and a[j]
 
 func partition(arr *[]int, lo, hi int) int {
-	pivot := lo
-	smallPointer := lo + 1
-	bigPointer := hi
-	for bigPointer > smallPointer {
-		for (*arr)[smallPointer] < (*arr)[pivot] && smallPointer <= hi {
-			smallPointer++
+	pivot := hi
+	i := lo - 1
+	for j := lo; j <= hi-1; j++ {
+		if (*arr)[j] <= (*arr)[pivot] {
+			i++
+			(*arr)[i], (*arr)[j] = (*arr)[j], (*arr)[i]
 		}
-
-		for (*arr)[bigPointer] > (*arr)[pivot] && bigPointer >= lo {
-			bigPointer--
-		}
-
-		if bigPointer <= smallPointer {
-			break
-		}
-
-		(*arr)[smallPointer], (*arr)[bigPointer] = (*arr)[bigPointer], (*arr)[smallPointer]
 	}
-	(*arr)[bigPointer], (*arr)[pivot] = (*arr)[pivot], (*arr)[bigPointer]
-	return bigPointer
+	(*arr)[i+1], (*arr)[hi] = (*arr)[hi], (*arr)[i+1]
+	return i + 1
 }
 
 func findSmallest(arr []int, n int) int {

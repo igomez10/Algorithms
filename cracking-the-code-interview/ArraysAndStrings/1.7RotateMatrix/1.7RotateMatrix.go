@@ -9,8 +9,9 @@ func main() {
 }
 
 func RotateMatrix(arr *[][]int) {
-	for initial := 0; initial < len(*arr)/2; initial++ {
+	fmt.Println("Hey")
 
+	for initial := 0; initial < len(*arr)/2; initial++ {
 		for i := initial; i < len(*arr)-initial-1; i++ {
 
 			tmp := (*arr)[initial][i]
@@ -20,7 +21,7 @@ func RotateMatrix(arr *[][]int) {
 			(*arr)[len(*arr)-1-initial][len(*arr)-1-i], tmp = tmp, (*arr)[len(*arr)-1-initial][len(*arr)-1-i]
 
 			(*arr)[len(*arr)-1-i][initial], tmp = tmp, (*arr)[len(*arr)-1-i][initial]
-
+			fmt.Println("Hey")
 			(*arr)[initial][i], tmp = tmp, (*arr)[initial][i]
 		}
 
