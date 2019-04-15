@@ -4,23 +4,9 @@ import (
 	"testing"
 )
 
-func TestIsRotation(t *testing.T) {
-
-	testCases := [][]string{
-		[]string{"Hello", "loHel"},
-		[]string{"Hello", "llos"},
-	}
-
-	expectedResult := []bool{
-		true,
-		false,
-	}
-
-	for i := range testCases {
-		if isRotation(testCases[i][0], testCases[i][1]) != expectedResult[i] {
-			t.Errorf("Expected %t for %s %s rotation", expectedResult[i], testCases[i][1], testCases[i][0])
-		}
-	}
+func TestStringRotation(t *testing.T) {
+	//	s1 := "Hello"
+	//	s2 := "loHel"
 
 }
 
@@ -49,6 +35,7 @@ func TestIsSubstring(t *testing.T) {
 		"HELLO",
 		"Hella",
 		"lloi",
+		"Hello",
 	}
 
 	for i := range notSubstrings {

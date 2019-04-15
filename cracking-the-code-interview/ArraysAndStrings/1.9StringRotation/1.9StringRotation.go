@@ -1,21 +1,14 @@
 package main
 
-func main() {}
+import "fmt"
 
-func isRotation(s1, s2 string) bool {
-	longer := s1
-	smaller := s2
-	if longer < smaller {
-		smaller, longer = longer, smaller
-	}
+func main() {
 
-	combined := longer + longer
+}
 
-	if isSubstring(smaller, combined) {
-		return true
-	}
-	return false
-
+// StringRotation returns true is s2 if by rotation the characters s1 can be obtained
+func StringRotation(s1, s2 string) {
+	//	longed := s1 + s1
 }
 
 func isSubstring(s1, s2 string) bool {
@@ -28,12 +21,11 @@ func isSubstring(s1, s2 string) bool {
 	}
 
 	var counter int
-	for i := 0; i <= len(longest)-len(smallest); i++ {
+	for i := range longest {
 		counter = 0
 		for j := 0; j < len(smallest); j++ {
-			longchar := longest[i+j]
-			smallchar := smallest[j]
-			if longchar == smallchar {
+			fmt.Println(longest, smallest, j, i)
+			if longest[i+j] == smallest[j] {
 				counter++
 			} else {
 				break
