@@ -12,25 +12,35 @@ func main() {
 func ZeroMatrix(matrix *[][]int) {
 	numcols, numrows := len(*matrix), len((*matrix)[0])
 
-	markedXs := make([]bool, numcols)
-	markedYs := make([]bool, numrows)
+	markedXs := make([]int, 0, numcols)
+	markedYs := make([]int, 0, numrows)
 
 	//find all 0s in matrix
 	for Yi := range *matrix {
 		for Xi := range (*matrix)[0] {
 			if (*matrix)[Yi][Xi] == 0 {
-				markedXs[Xi] = true
-				markedYs[Yi] = true
+				markedXs = append(markedXs, Xi)
+				markedYs = append(markedYs, Yi)
 			}
 		}
 	}
 
-	//change all numbers in affected rows, cols
-	for Yi := range *matrix {
-		for Xi := range (*matrix)[0] {
-			if markedXs[Xi] || markedYs[Yi] {
-				(*matrix)[Yi][Xi] = 0
-			}
-		}
+	for affectedRow := range markedYs {
+		NullifyRow(matrix, markedYs[affectedRow])
+	}
+
+	for affectedCol := range markedXs {
+		NullifyCol(matrix, markedXs[affectedCol])
+	}
+
+}
+
+func NullifyRow(matrix *[][]int, index int) {
+	(*matrix)[index] = make([]int, len((*matrix)[0]))
+}
+
+func NullifyCol(matrix *[][]int, index int) {
+	for i := range *matrix {
+		(*matrix)[i][index] = 0
 	}
 }
