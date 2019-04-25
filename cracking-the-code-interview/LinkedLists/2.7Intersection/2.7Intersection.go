@@ -24,3 +24,16 @@ func Intersection(headA, headB *LinkedListNode) *LinkedListNode {
 
 	return nil
 }
+
+func count(head *LinkedListNode) int {
+	if head == nil {
+		return 0
+	}
+	counter := 0
+	for head != nil {
+		counter++
+		head = head.next
+	}
+
+	return counter
+}
