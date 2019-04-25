@@ -8,32 +8,54 @@ type LinkedListNode struct {
 func main() {}
 
 func Intersection(headA, headB *LinkedListNode) *LinkedListNode {
+
+	if headA == nil || headB == nil {
+		return nil
+	}
+
 	iterativeHeadA := headA
+	iterativeHeadB := headB
 
-	for iterativeHeadA != nil {
+	lengthA := 1
+	lengthB := 1
 
-		iterativeHeadB := headB
-		for iterativeHeadB != nil {
-			if iterativeHeadA == iterativeHeadB {
-				return iterativeHeadA
-			}
-			iterativeHeadB = iterativeHeadB.next
-		}
+	for iterativeHeadA.next != nil {
+		lengthA++
 		iterativeHeadA = iterativeHeadA.next
 	}
 
+	for iterativeHeadB.next != nil {
+		lengthB++
+		iterativeHeadB = iterativeHeadB.next
+	}
+
+	if iterativeHeadB != iterativeHeadA {
+		return nil
+	}
+
+	longHead := headA
+	shortHead := headB
+
+	if lengthA < lengthB {
+		longHead, shortHead = shortHead, longHead
+	}
+
+	itemsToRemove := lengthA - lengthB
+	if itemsToRemove < 0 {
+		itemsToRemove = itemsToRemove * -1
+	}
+
+	for itemsToRemove != 0 {
+		longHead = longHead.next
+		itemsToRemove--
+	}
+
+	for longHead != nil {
+		if longHead == shortHead {
+			return longHead
+		}
+		longHead = longHead.next
+		shortHead = shortHead.next
+	}
 	return nil
-}
-
-func count(head *LinkedListNode) int {
-	if head == nil {
-		return 0
-	}
-	counter := 0
-	for head != nil {
-		counter++
-		head = head.next
-	}
-
-	return counter
 }
