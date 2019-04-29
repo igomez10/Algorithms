@@ -34,8 +34,29 @@ func TestPriorityQueue(t *testing.T) {
 	}
 
 	popped := pq.pop()
-	if (*popped).getPriority() != node2.value {
-		t.Errorf("expected to pop %+v - got %+v", node2.value, (*popped).getPriority())
+	if popped.getPriority() != node2.value {
+		t.Errorf("expected to pop %+v - got %+v", node2.value, popped.getPriority())
 	}
 
+	secondPopped := pq.pop()
+	if secondPopped.getPriority() != node1.value {
+		t.Errorf("expected to pop %+v - got %+v", node1.value, popped.getPriority())
+	}
+
+	nilPopped := pq.pop()
+	if nilPopped != nil {
+		t.Errorf("expected to pop %+v - got %+v", node1.value, popped.getPriority())
+	}
 }
+
+//func TestNodeSetNext(t *testing.T) {
+//
+//	node1 := node{value: 1, min: 0}
+//	node2 := node{value: 2, min: 1}
+//
+//	node1.setNext(node2)
+//
+//	if node1.getNext() != node2 {
+//		t.Errorf("Error assigning next node to node, expected %+v got %+v", node2, node1.getNext())
+//	}
+//}

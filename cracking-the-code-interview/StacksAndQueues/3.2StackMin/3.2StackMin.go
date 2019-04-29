@@ -8,7 +8,7 @@ type node struct {
 
 type queuable interface {
 	getPriority() int
-	getNext() *queuable
+	//getNext() *queuable
 	setNext(queuable)
 	getMin() int
 	setMin(int)
@@ -23,12 +23,13 @@ func (n node) getPriority() int {
 	return n.value.(int)
 }
 
-func (n node) getNext() *node {
-	return n.next
+func (n node) getNext() queuable {
+	return queuable(n.next)
 }
 
-func (n *node) setNext(newNext node) {
-	n.next = &newNext
+func (n node) setNext(newNext queuable) {
+	nextNode := newNext.(node)
+	n.next = &nextNode
 }
 
 func (n node) getMin() int {
@@ -46,6 +47,10 @@ func main() {
 // IMPLEMENTED AS A STACK
 func (pq *priorityQueue) push(element queuable) {
 	pq.length++
+	if pq.length == 1 {
+		pq.first = &element
+		return
+	}
 
 	element.setNext(*pq.first)
 
@@ -60,18 +65,22 @@ func (pq *priorityQueue) push(element queuable) {
 }
 
 // IMPLEMENTED AS A STACK
-func (pq *priorityQueue) pop() *queuable {
+func (pq *priorityQueue) pop() queuable {
 
 	popped := pq.first
 
 	if popped != nil {
-		newFirst := (*pq.first).getNext()
-		pq.first = newFirst
+
+		nodable := (*popped).(node)
+		newFirst := nodable.getNext()
+		pq.first = &newFirst
+
+		if pq.length > 0 {
+			pq.length--
+		}
+
+		return *popped
 	}
 
-	if pq.length > 0 {
-		pq.length--
-	}
-
-	return popped
+	return *popped
 }
