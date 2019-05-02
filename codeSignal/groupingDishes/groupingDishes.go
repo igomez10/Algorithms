@@ -18,16 +18,14 @@ func groupDished(arr [][]string) [][]string {
 	//initialize ingredients
 	for i := range arr {
 		for j := 1; j < len(arr[i]); j++ {
-			if _, exists := mapIngredients[arr[i][j]]; !exists {
-				mapIngredients[arr[i][j]]++
-			}
+			mapIngredients[arr[i][j]]++
 		}
 	}
 
 	ingredients := []string{}
 
 	for k := range mapIngredients {
-		if mapIngredients[k] > 2 {
+		if mapIngredients[k] >= 2 {
 			ingredients = append(ingredients, k)
 		}
 	}

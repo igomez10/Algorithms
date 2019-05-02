@@ -1,7 +1,9 @@
 package main
 
-import "strings"
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestGroupingDishes(t *testing.T) {
 
@@ -20,6 +22,8 @@ func TestGroupingDishes(t *testing.T) {
 		[]string{"Sauce", "Pizza", "Quesadilla", "Salad"},
 		[]string{"Tomato", "Pizza", "Salad", "Sandwich"},
 	}
+
+	//t.Error(result)
 
 	for i := range result {
 		if len(result[i]) != len(expectedResult[i]) {
