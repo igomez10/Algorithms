@@ -1,10 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"math"
 	"sort"
 	"strconv"
-	"strings"
 )
 
 type arrLargest []int
@@ -37,13 +38,26 @@ func main() {
 
 func findLargest(arr []int) string {
 	sortableArr := arrLargest(arr)
-	builder := strings.Builder{}
 	sort.Sort(sortableArr)
 
-	for i := len(arr) - 1; i >= 0; i-- {
-		builder.WriteString(strconv.Itoa(sortableArr[i]))
+	counter := 0
+	for i := range arr {
+		counter += 10 * int(math.Log10(float64(arr[i])))
 	}
 
-	return builder.String()
+	buf := bytes.Buffer{}
+	buf.Grow(counter)
+
+	for i := len(arr) - 1; i >= 0; i-- {
+		buf.WriteString(strconv.Itoa(sortableArr[i]))
+	}
+
+	response := buf.String()
+
+	if response[0] == '0' {
+		return "0"
+	}
+
+	return response
 
 }
