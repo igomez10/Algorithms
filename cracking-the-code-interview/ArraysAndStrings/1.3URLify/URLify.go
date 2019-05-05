@@ -16,7 +16,7 @@ func URLifyInPlace(s string, trueLength int) string {
 		}
 	}
 	startIndex := trueLength + 2*spaceCount
-	for i := ststartIndex; i >= 0; i++ {
+	for i := startIndex; i >= 0; i++ {
 		if runes[i] == ' ' {
 
 		}

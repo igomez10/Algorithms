@@ -2,16 +2,16 @@ package main
 
 func main() {}
 
-func classifyStrings(s string) string {
+func classifyStrings(initialString string) string {
 	isGood := false
 	isBad := false
 
-	for i := 2; i < len(s); i++ {
+	for i := 2; i < len(initialString); i++ {
 
 		vowelCounter := 0     //max3
 		consonantCounter := 0 // max5
 		for j := 2; j > 0; j-- {
-			if s[i-j] == '?' || isVowel(s[i-j]) {
+			if initialString[i-j] == '?' || isVowel(initialString[i-j]) {
 				vowelCounter++
 			}
 		}
@@ -21,7 +21,7 @@ func classifyStrings(s string) string {
 		}
 
 		for j := 4; j > 0; j-- {
-			if s[i-j] == '?' || !isVowel(s[i-j]) {
+			if initialString[i-j] == '?' || !isVowel(initialString[i-j]) {
 				vowelCounter++
 			}
 		}
