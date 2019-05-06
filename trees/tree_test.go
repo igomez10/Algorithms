@@ -9,14 +9,14 @@ func TestTreeFromArray(t *testing.T) {
 
 	arrayValues := tree.getAllChildren()
 
-	inputFrequencyTable := make(map[int]int)
+	inputFrequencyTable := make(map[interface{}]int)
 	for i := range arrayValues {
 		inputFrequencyTable[values[i]]++
 	}
 
 	// Compare if elements given in the initial input are in the new tree, dont
 	// worry about order, only if present with the same frequency
-	frequencyTable := make(map[int]int)
+	frequencyTable := make(map[interface{}]int)
 	for i := range arrayValues {
 		frequencyTable[(*arrayValues[i]).Val]++
 	}
@@ -29,6 +29,20 @@ func TestTreeFromArray(t *testing.T) {
 		} else {
 			t.Errorf("Value %+d not found in tree", inputKey)
 		}
+	}
+
+	// TRIVIAL TESTS
+
+	if tree.Val != 1 {
+		t.Errorf("Unepected root val %+v, expected %d", tree.Val, 1)
+	}
+
+	if tree.Left.Left.Val != 4 {
+		t.Errorf("Unepected root val %+v, expected %d", tree.Val, 4)
+	}
+
+	if tree.Right.Left.Val != 6 {
+		t.Errorf("Unepected root val %+v, expected %d", tree.Val, 6)
 	}
 
 }

@@ -1,7 +1,9 @@
 package tree
 
+// Node represents a node in the tree, has a value int and might have left
+// and right child
 type Node struct {
-	Val   int
+	Val   interface{}
 	Left  *Node
 	Right *Node
 }

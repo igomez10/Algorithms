@@ -2,8 +2,8 @@ package tree
 
 // TraverseBFS returns the node.Val from all the nodes in the tree by
 // doing in level search
-func TraverseBFS(root *Node) []int {
-	values := []int{root.Val}
+func TraverseBFS(root *Node) []interface{} {
+	values := []interface{}{root.Val}
 
 	if root.Left != nil {
 		values = append(values, TraverseBFS(root.Left)...)
