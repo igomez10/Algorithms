@@ -2,15 +2,22 @@ package tree
 
 // TraverseBFS returns the node.Val from all the nodes in the tree by
 // doing in level search
-func TraverseBFS(root *Node) []interface{} {
-	values := []interface{}{root.Val}
+func TraverseBFS(root *Node) []*Node {
+	values := []*Node{}
 
-	if root.Left != nil {
-		values = append(values, TraverseBFS(root.Left)...)
-	}
+	valuesToVisit := []*Node{root}
 
-	if root.Right != nil {
-		values = append(values, TraverseBFS(root.Right)...)
+	for len(valuesToVisit) > 0 {
+
+		values = append(values, valuesToVisit[0])
+
+		if valuesToVisit[0].Left != nil {
+			valuesToVisit = append(valuesToVisit, valuesToVisit[0].Left)
+		}
+		if valuesToVisit[0].Right != nil {
+			valuesToVisit = append(valuesToVisit, valuesToVisit[0].Right)
+		}
+		valuesToVisit = valuesToVisit[1:] //dequeue
 	}
 
 	return values
