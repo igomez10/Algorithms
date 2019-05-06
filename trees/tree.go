@@ -37,3 +37,11 @@ func (t *Node) getAllChildren() []*Node {
 	}
 	return response
 }
+
+func getHeight(root Node) int {
+	counter := 0
+	for iterativeRoot := &root; iterativeRoot != nil; iterativeRoot = iterativeRoot.Left {
+		counter++
+	}
+	return counter
+}
