@@ -52,8 +52,12 @@ func TestGetHeight(t *testing.T) {
 	values := []int{1, 2, 3, 4, 5, 6, 7}
 
 	tree := FromArray(values)
-	height := getHeight(*tree)
+	height := GetHeight(*tree)
 	if height != 3 {
 		t.Errorf("Wrong height. Is %d but got %d", 3, height)
 	}
+}
+
+func TestTreeToString(t *testing.T) {
+
 }
