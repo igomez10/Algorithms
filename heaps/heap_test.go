@@ -27,6 +27,7 @@ func TestIsSorted(t *testing.T) {
 	if isSorted(badValues) {
 		m := "isSorted is passing a bad value for a binary heap: %+v"
 		t.Error(m, badValues)
+
 	}
 }
 
