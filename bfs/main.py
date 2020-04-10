@@ -66,5 +66,5 @@ arr = [
 expectedResult = 2
 
 s = Solution()
-print(s.countIslands(arr))
-# printMatrix(arr)
+
+printMatrix(arr)
