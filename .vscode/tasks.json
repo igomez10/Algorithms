@@ -8,6 +8,12 @@
             "type": "shell",
             "command": "python3 ${file}",
             "problemMatcher": []
+        },
+        {
+            "label": "reflex run",
+            "type": "shell",
+            "command": "reflex -r  '.' python3 ${file}",
+            "problemMatcher": []
         }
     ]
 }
