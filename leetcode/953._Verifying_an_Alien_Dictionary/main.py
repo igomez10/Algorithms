@@ -2,56 +2,19 @@ class Solution:
 
     # isBigger returns true if w1 is bigger than w2
     def isSmaller(self, w1, w2, order):
-        if w1 == w2:
-            return True
 
-        longer = w1
-        shorter = w2
-        if len(w2) > len(w1):
-            longer = w2
-            shorter = w1
+        for i in range(min(len(w1), len(w2))):
+            if order.find(w1[i]) > order.find(w2[i]):
+                return False
+            elif order.find(w1[i]) < order.find(w2[i]):
+                return True
 
-        for i in range(len(shorter)):
-            charInLonger = longer[i]
-            charInShorter = shorter[i]
-
-            if charInLonger != charInShorter:
-                # words are not the same and the current character will tell us which one is bigger
-                rankCharLonger = order.find(charInLonger)
-                rankCharShorter = order.find(charInShorter)
-
-                if rankCharLonger < rankCharShorter:
-                    # longer one should go first
-                    if longer == w1:
-                        return True
-                    return False
-                else:
-                    # longer one should go second
-                    if longer == w1:
-                        return False
-                    return True
-
-        if longer == w1:
+        if len(w1) > len(w2):
             return False
         else:
             return True
 
-        # if w1 == w2:
-        #     return True
-
-        # for i in range(min(len(w1), len(w2))):
-        #     if order.find(w1[i]) > order.find(w2[i]):
-        #         print("found misplaced character", w1[i], w2[i])
-        #         return False
-
-        # print("using legth to determine position")
-        # if len(w1) > len(w2):
-        #     return False
-        # else:
-        #     return True
-
     def isAlienSorted(self, words, order) -> bool:
-        self.order = order
         for i in range(1, len(words)):
             if not self.isSmaller(words[i-1], words[i], order):
                 return False
