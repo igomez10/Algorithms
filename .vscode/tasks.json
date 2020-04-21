@@ -10,9 +10,15 @@
             "problemMatcher": []
         },
         {
-            "label": "reflex run",
+            "label": "python reflex run",
             "type": "shell",
             "command": "reflex -r  '.' python3 ${file}",
+            "problemMatcher": []
+        }
+        {
+            "label": "go reflex run",
+            "type": "shell",
+            "command": "reflex -r  '.' go run ${file}",
             "problemMatcher": []
         }
     ]
