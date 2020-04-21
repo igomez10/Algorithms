@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
 	arr := [][]int{
@@ -56,4 +58,5 @@ func printMatrix(matrix [][]int) {
 		fmt.Println(matrix[i])
 	}
 	fmt.Println()
+
 }
