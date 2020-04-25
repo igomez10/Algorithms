@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "run",
+            "label": "python run",
             "type": "shell",
             "command": "python3 ${file}",
             "problemMatcher": []
@@ -19,6 +19,12 @@
             "label": "go reflex run",
             "type": "shell",
             "command": "reflex -r  '.' go run ${file}",
+            "problemMatcher": []
+        },
+        {
+            "label": "go run",
+            "type": "shell",
+            "command": "go run ${file}",
             "problemMatcher": []
         }
     ]
