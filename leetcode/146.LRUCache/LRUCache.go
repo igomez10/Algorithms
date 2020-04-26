@@ -1,10 +1,5 @@
 package main
 
-import (
-	"regexp"
-	"strings"
-)
-
 type SinlgyLinkedListNode struct {
 	value int
 	next  *SinlgyLinkedListNode
@@ -21,9 +16,6 @@ func Constructor(capacity int) LRUCache {
 	cap := capacity
 	newMRU := SinlgyLinkedListNode{}
 	newLRUCache := LRUCache{cache: newCache, capacity: cap, MRU: &newMRU}
-	re := regexp.MustCompile(`^\ *[+-]?[0-9]+\.?[0-9]?`)
-	found := re.Find
-	strings.TrimLeft
 
 	return newLRUCache
 }
