@@ -14,7 +14,7 @@
             "type": "shell",
             "command": "reflex -r  '.' python3 ${file}",
             "problemMatcher": []
-        }
+        },
         {
             "label": "go reflex run",
             "type": "shell",
