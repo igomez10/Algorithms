@@ -21,4 +21,5 @@ func URLifyInPlace(s string, trueLength int) string {
 
 		}
 	}
+	return string(runes)
 }

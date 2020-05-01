@@ -1,7 +1,9 @@
 package main
 
-import "strings"
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestClassifyStrings(t *testing.T) {
 	badWords := []string{
@@ -15,8 +17,6 @@ func TestClassifyStrings(t *testing.T) {
 		"sadlfkjhsaldf",
 		"qwrtpc",
 	}
-
-	mixedWords := []string{}
 
 	for i := range badWords {
 		if strings.Compare(classifyStrings(badWords[i]), "bad") != 0 {

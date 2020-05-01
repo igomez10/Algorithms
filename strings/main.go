@@ -1,7 +1,8 @@
 package main
 
-import "fmt"
-import "strings"
+import (
+	"fmt"
+)
 
 // Return the longest common subsequence between two strings
 
@@ -34,11 +35,12 @@ func longestCommonSubstring(firstString, secondString string) string {
 
 	//for each entry in the dictionary try the following fors
 	for i := 0; i < len(firstString); i++ {
-		var biggestSubsequence string
+		// var biggestSubsequence string
 		for j := 0; j < len(secondString); j++ {
 		}
 	}
-	strings.Contains
+	// strings.Contains
+	return ""
 }
 
 func main() {
