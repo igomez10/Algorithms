@@ -22,20 +22,22 @@ type singlyLinkedListNode struct {
 	next *singlyLinkedListNode
 }
 
-func (list *singlyLinkedListNode) getData() int32 {
+func (list singlyLinkedListNode) getData() interface{} {
 	return list.data
 }
 
-func (list *doublyLinkedListNode) getData() int32 {
+func (list doublyLinkedListNode) getData() interface{} {
 	return list.data
 }
 
-func (list *singlyLinkedListNode) getNext() *singlyLinkedListNode {
-	return list.next
+func (list *singlyLinkedListNode) getNext() *linkedList {
+	ans := linkedList(list.next)
+	return &ans
 }
 
-func (list *doublyLinkedListNode) getNext() *doublyLinkedListNode {
-	return list.next
+func (list *doublyLinkedListNode) getNext() *linkedList {
+	ans := linkedList(list.next)
+	return &ans
 }
 
 func createDoublyLLFromSinlgyLL(head *singlyLinkedListNode) *doublyLinkedListNode {
@@ -61,13 +63,12 @@ func main() {
 	fmt.Print("\n\n\n\n\n")
 	initalValues := []int32{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	firstNode := createSinglyLinkedList(initalValues)
-	var head *linkedList
-	head = &firstNode.(*linkedList)
+	head := firstNode
 	// COUNT
-	fmt.Println(count(*head))
-	fmt.Printf("The list is made of %d elements -- %v \n", count(*head), count(*head) == int32(len(initalValues)))
+	fmt.Println(count(head))
+	fmt.Printf("The list is made of %d elements -- %v \n", count(head), count(head) == int32(len(initalValues)))
 
-	if count(*head) != int32(len(initalValues)) {
+	if count(head) != int32(len(initalValues)) {
 		message := "%s is not working"
 		panic(fmt.Sprintf(message, count))
 	}
@@ -108,10 +109,10 @@ func main() {
 	// INSERT IN NTH POSITION
 	insertedElement := int32(10)
 	index := 9
-	insertNth(&head, index, insertedElement)
+	insertNth(head, index, insertedElement)
 	stringMold := "Inserted element %d to list in index %d, new length is now %d  -- Expected %d got %d -- %t\n"
 	isWorking := getNode(head, int32(index)) == int32(insertedElement)
-	message := fmt.Sprintf(stringMold, insertedElement, index, count(*head), insertedElement, getNode(head, int32(index)), isWorking)
+	message := fmt.Sprintf(stringMold, insertedElement, index, count(head), insertedElement, getNode(head, int32(index)), isWorking)
 	if !isWorking {
 		(*head).printList()
 		panic(message)
@@ -121,14 +122,14 @@ func main() {
 
 	// SORTED INSERT
 	insertedElement = int32(11)
-	sortedInsert(&head, insertedElement)
+	sortedInsert(head, insertedElement)
 
 	// APPEND
 	firstArray := []int32{1, 2, 3, 4, 5, 6}
 	secondArray := []int32{7, 8, 9, 10, 11, 12, 13}
-	firstList := createLinkedList(firstArray)
-	secondList := createLinkedList(secondArray)
-	appendLinkedLists(&firstList, &secondList)
+	firstList := createSinglyLinkedList(firstArray)
+	secondList := createSinglyLinkedList(secondArray)
+	appendLinkedLists(firstList, secondList)
 	receivedLength := count(firstList)
 	expectedLength := int32(len(firstArray) + len(secondArray))
 	moldMessage := "Length of linked list, expected %d and got %d -- %t\n"
@@ -140,8 +141,8 @@ func main() {
 
 	//FRONTBACKSPLIT
 	initialArray := []int32{2, 3, 5, 7, 11}
-	newHead := createLinkedList(initialArray)
-	splittedHead := frontBackSplit(&newHead)
+	newHead := createSinglyLinkedList(initialArray)
+	splittedHead := frontBackSplit(newHead)
 	expectedLengthFirstList := int(len(initialArray)/2) + len(initialArray)%2
 	expectedLengthSecondList := len(initialArray) - expectedLengthFirstList
 	receivedLengthFirstList := count(newHead)
@@ -160,8 +161,8 @@ func main() {
 
 	//REMOVE DUPLICATES
 	initialArray = []int32{1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 6, 6, 7, 8, 9, 9}
-	newHead = createLinkedList(initialArray)
-	removeDuplicates(&newHead)
+	newHead = createSinglyLinkedList(initialArray)
+	removeDuplicates(newHead)
 	if !compareArrayWithLinkedList(buildSetFromArray(initialArray), newHead) {
 		newHead.printList()
 		fmt.Println(buildSetFromArray(initialArray))
@@ -173,16 +174,16 @@ func main() {
 	firstArray = []int32{1, 2, 3}
 	secondArray = []int32{1, 2, 3}
 
-	firstList = createLinkedList(firstArray)
-	secondList = createLinkedList(secondArray)
-	moveNode(&firstList, &secondList)
+	firstList = createSinglyLinkedList(firstArray)
+	secondList = createSinglyLinkedList(secondArray)
+	moveNode(firstList, secondList)
 	if count(firstList) != count(secondList)+1 {
 		panic("Unexpected move for node")
 	}
 
 	//ALTERNATING SPLIT
 	initialArray = []int32{1, 2, 3, 4, 5, 6, 7, 8, 9}
-	newHead = createLinkedList(initialArray)
+	newHead = createSinglyLinkedList(initialArray)
 	generatedHead := alternatingSplit(&newHead)
 	if count(newHead)+count(*generatedHead) != int32(len(initialArray)) {
 		panic("Coult not alternate split")
@@ -190,8 +191,8 @@ func main() {
 
 	firstArray = []int32{2, 4, 6, 7, 8, 9, 10}
 	secondArray = []int32{1, 3, 5}
-	firstList = createLinkedList(firstArray)
-	secondList = createLinkedList(secondArray)
+	firstList = createSinglyLinkedList(firstArray)
+	secondList = createSinglyLinkedList(secondArray)
 	shuffleMerge(firstList, &secondList)
 
 	if count(firstList) != int32(len(firstArray)+len(secondArray)) && count(secondList) != 0 {
@@ -203,17 +204,17 @@ func main() {
 	firstArray = []int32{1, 5, 7, 8, 9, 10, 11, 12, 13}
 	secondArray = []int32{2, 3, 4, 6}
 
-	firstList = createLinkedList(firstArray)
-	secondList = createLinkedList(secondArray)
-	newList := sortedMerge(&firstList, &secondList)
+	firstList = createSinglyLinkedList(firstArray)
+	secondList = createSinglyLinkedList(secondArray)
+	newList := sortedMerge(firstList, secondList)
 	if int32(len(firstArray)+len(secondArray)) != count(*newList) {
 		(*newList).printList()
 		panic("Error merging list, dimensions dont match")
 	}
 
 	firstArray = []int32{6, 5, 4, 3, 1, 2, 1, 9, -5}
-	firstList = createLinkedList(firstArray)
-	mergeSort(&firstList)
+	firstList = createSinglyLinkedList(firstArray)
+	mergeSort(firstList)
 	currentHead := firstList
 	for currentHead.getNext() != nil {
 		currentHeadData := currentHead.getData().(int32)
@@ -234,8 +235,8 @@ func main() {
 	//	firstArray = []int32{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	//	secondArray = []int32{2, 4, 6, 8}
 	//
-	//	firstList = createLinkedList(firstArray)
-	//	secondList = createLinkedList(secondArray)
+	//	firstList = createSinglyLinkedList(firstArray)
+	//	secondList = createSinglyLinkedList(secondArray)
 	//	newHead = sortedIntersect(&firstList, &secondList)
 	//	commonElementsInArrays := findCommonInArray(firstArray, secondArray)
 	//	if len(commonElementsInArrays) != int(count(newHead)) {
@@ -245,14 +246,14 @@ func main() {
 	//
 	//	// REVERSE
 	//	firstArray = []int32{9, 1}
-	//	firstList = createLinkedList(firstArray)
+	//	firstList = createSinglyLinkedList(firstArray)
 	//	reverseList(&firstList)
 	//	//printList(firstList)
 	//
 	//	//CREATE DOUBLY LINKED LIST
 	//
 	//	firstArray = []int32{1, 2, 3, 4, 5, 6, 7, 8, 9}
-	//	firstList = createLinkedList(firstArray)
+	//	firstList = createSinglyLinkedList(firstArray)
 	//	doublyListHead := createDoublyLLFromSinlgyLL(firstList)
 	//
 	//	doublyListHead.printList()
@@ -326,15 +327,15 @@ func appendToBeginning(head *singlyLinkedListNode, newElement int32) *singlyLink
 	return head
 }
 
-func (list *doublyLinkedListNode) printList() {
-	for p := list; p != nil; p = p.next {
+func (list doublyLinkedListNode) printList() {
+	for p := &list; p != nil; p = p.next {
 		fmt.Println(p.data)
 	}
 
 }
 
-func (list *singlyLinkedListNode) printList() {
-	for p := list; p != nil; p = p.next {
+func (list singlyLinkedListNode) printList() {
+	for p := &list; p != nil; p = p.next {
 		fmt.Println(p.data)
 	}
 
@@ -344,7 +345,7 @@ func deleteFirstElement(head *singlyLinkedListNode) *singlyLinkedListNode {
 	return head.next
 }
 
-func createSinglyLinkedList(arr []int32) singlyLinkedListNode {
+func createSinglyLinkedList(arr []int32) *singlyLinkedListNode {
 	initialNode := singlyLinkedListNode{
 		data: arr[0],
 		next: nil,
@@ -364,34 +365,34 @@ func createSinglyLinkedList(arr []int32) singlyLinkedListNode {
 	return head
 }
 
-func createDoublyLinkedList(arr []int32) doublyLinkedListNode {
-	initialNode := singlyLinkedListNode{
+func createDoublyLinkedList(arr []int32) *doublyLinkedListNode {
+	head := &doublyLinkedListNode{
 		data: arr[0],
 		next: nil,
 	}
 
-	head := &initialNode
-	builder := &initialNode
+	builder := head
 
 	for i := 1; i < len(arr); i++ {
-		newNode := singlyLinkedListNode{
+		newNode := &doublyLinkedListNode{
 			data: arr[i],
 			next: nil,
+			prev: builder,
 		}
-		builder.next = &newNode
-		builder = &newNode
+		builder.next = newNode
+		builder = newNode
 	}
 	return head
 }
 
-func getNodeFromTail(head *linkedList, positionFromTail int32) int32 {
+func getNodeFromTail(head linkedList, positionFromTail int32) int32 {
 	currentHead := head
 	elementsInList := count(head)
 	nthElement := elementsInList - positionFromTail
 	for i := int32(0); i < nthElement; i++ {
-		currentHead = currentHead.next
+		currentHead = *(currentHead.getNext())
 	}
-	return currentHead.data
+	return currentHead.getData().(int32)
 }
 
 func count(head linkedList) int32 {
@@ -399,43 +400,41 @@ func count(head linkedList) int32 {
 	currentHead := head
 	for currentHead != nil {
 		counter++
-		currentHead = currentHead.getNext()
+		currentHead = *(currentHead.getNext())
 	}
 	return counter
 }
 
-func pop(head **singlyLinkedListNode) {
-	*head = (*head).next
+func pop(head *singlyLinkedListNode) {
+	head = head.next
 }
 
-func push(head **singlyLinkedListNode, element int32) {
-	newNode := &singlyLinkedListNode{data: element, next: *head}
-	*head = newNode
+func push(head *singlyLinkedListNode, element int32) {
+	newNode := &singlyLinkedListNode{data: element, next: head.next}
+	head = newNode
 }
 
-func getNode(head *linkedList, index int32) int32 {
+func getNode(head linkedList, index int32) int32 {
 	currentHead := head
 	for i := int32(0); i < index; i++ {
-		currentHead = currentHead.next
+		currentHead = *(currentHead.getNext())
 	}
-	return currentHead.data
+	return currentHead.getData().(int32)
 }
 
-func insertNth(head **linkedList, index int, element int32) {
-	currentHead := *head
+func insertNth(head *singlyLinkedListNode, index int, element int32) {
+	currentHead := head
 	for i := 0; i < index-1 && currentHead.next != nil; i++ {
 		currentHead = currentHead.next
 	}
 
-	newNode := singlyLinkedListNode{}
-	newNode.data = element
-	newNode.next = currentHead.next
-	currentHead.next = &newNode
+	newNode := &singlyLinkedListNode{data: element, next: currentHead.next}
+	currentHead.next = newNode
 }
 
-func sortedInsert(head **linkedList, insertedElement int32) {
+func sortedInsert(head *singlyLinkedListNode, insertedElement int32) {
 	currentHead := *head
-	currentMaximum := (currentHead).data
+	currentMaximum := currentHead.getData()
 
 	newNode := singlyLinkedListNode{
 		data: insertedElement,
@@ -456,10 +455,10 @@ func sortedInsert(head **linkedList, insertedElement int32) {
 	currentHead.next = &newNode
 }
 
-func appendLinkedLists(firstList *linkedList, secondList *linkedList) {
+func appendLinkedLists(firstList *singlyLinkedListNode, secondList *singlyLinkedListNode) {
 
 	// get to the last element of firstList and make .next the head of secondList
-	currentHead := *firstList
+	currentHead := firstList
 	for currentHead.next != nil {
 		currentHead = currentHead.next
 	}
@@ -469,15 +468,15 @@ func appendLinkedLists(firstList *linkedList, secondList *linkedList) {
 }
 
 //modifies the initial head and returns the secondHead from the middle
-func frontBackSplit(head *linkedList) *linkedList {
+func frontBackSplit(head linkedList) *linkedList {
 	//COUNT ELEMENTS IN LIST
 	//TRAVERSE TO ELEMENT IN CEIL(MIDDLE)
 	//SECONDHEAD = *CEIL(MIDDLE).next
 	//NODE CEIL(MIDDLE).next = nil
-	slowHead := *head
-	fastHead := *head
-	for fastHead.next != nil && fastHead.next.next != nil {
-		slowHead = slowHead.next
+	slowHead := &head
+	fastHead := &head
+	for fastHead.getNext() != nil && (*fastHead.getNext()).getNext() != nil {
+		slowHead = slowHead.getNext()
 		fastHead = fastHead.next.next
 	}
 	if fastHead.next != nil {
@@ -490,8 +489,8 @@ func frontBackSplit(head *linkedList) *linkedList {
 }
 
 //Removes duplicates from a sorted list
-func removeDuplicates(head *linkedList) {
-	currentHead := *head
+func removeDuplicates(head *singlyLinkedListNode) {
+	currentHead := head
 	for currentHead.next != nil {
 		if currentHead.data == currentHead.next.data {
 			currentHead.next = currentHead.next.next
@@ -515,21 +514,20 @@ func buildSetFromArray(arr []int32) []int32 {
 }
 
 func compareArrayWithLinkedList(arr []int32, head linkedList) bool {
-	areEqual := true
-	for i := 0; head.next != nil && i < len(arr); head, i = head.next, i+1 {
+	for i := 0; head != nil && i < len(arr); head, i = head.getNext(), i+1 {
 		if head.data != arr[i] {
 			areEqual = false
 			log.Println(head.data, " !=", arr[i])
 		}
 	}
-	return areEqual
+	return true
 }
 
-func moveNode(firstHead *linkedList, secondHead *linkedList) {
-	oldSecondHead := (*secondHead).next
-	(*secondHead).next = *firstHead
+func moveNode(firstHead *singlyLinkedListNode, secondHead *singlyLinkedListNode) {
+	oldSecondHead := secondHead.next
+	secondHead.next = firstHead
 	firstHead = secondHead
-	*secondHead = oldSecondHead
+	secondHead = oldSecondHead
 }
 
 func alternatingSplit(head *linkedList) *linkedList {
@@ -666,7 +664,7 @@ func findCommonInArray(firstArray []int32, secondArray []int32) []int32 {
 	return commonElements
 }
 
-func sortedIntersect(head1 *linkedList, head2 *linkedList) *linkedList {
+func sortedIntersect(head1 *singlyLinkedListNode, head2 *singlyLinkedListNode) *singlyLinkedListNode {
 	movingHead1 := head1
 	movingHead2 := head2
 
@@ -693,15 +691,14 @@ func sortedIntersect(head1 *linkedList, head2 *linkedList) *linkedList {
 	return initialNode
 }
 
-func reverseList(head **singlyLinkedListNode) {
-	var newHead *singlyLinkedListNode
-	var nextNode *singlyLinkedListNode
+func reverseList(head *singlyLinkedListNode) {
+	newHead := &singlyLinkedListNode{}
 
-	for *head != nil {
-		nextNode = (*head).next
-		(*head).next = newHead
-		newHead = *head
-		*head = nextNode
+	for head != nil {
+		newNode := head
+		newNode.next = newHead.next
+		newHead.next = newNode
+		head = head.next
 	}
-	*head = newHead
+	head = newHead
 }
