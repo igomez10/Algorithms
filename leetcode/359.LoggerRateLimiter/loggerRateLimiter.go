@@ -24,13 +24,13 @@ func Constructor() Logger {
   The timestamp is in seconds granularity. */
 func (this *Logger) ShouldPrintMessage(timestamp int, message string) bool {
 	// prune messages older than timestamp + 10
-	for this.Stream.Len() > 0 && timestamp-(*this.Stream)[0].Timestamp >= 10 {
-		this.BannedMessages[(*this.Stream)[0].Message] = false
+	for this.Stream.Len() > 0 && timestamp-this.Stream.GetOldestLog().Timestamp >= 10 {
+		delete(this.BannedMessages, this.Stream.GetOldestLog().Message)
 		heap.Pop(this.Stream)
 	}
 
 	// check if message is in heap
-	if isBanned := this.BannedMessages[message]; isBanned {
+	if _, ok := this.BannedMessages[message]; ok {
 		return false
 	}
 
@@ -87,4 +87,8 @@ func Answer(events []string, logs []Log) []*bool {
 	}
 
 	return res
+}
+
+func (l LogStream) GetOldestLog() Log {
+	return l[0]
 }
