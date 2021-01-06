@@ -1,9 +1,5 @@
 package main
 
-import (
-	"container/list"
-)
-
 //  * Definition for a binary tree node.
 type TreeNode struct {
 	Val   int
@@ -17,17 +13,25 @@ type NodeToVisit struct {
 }
 
 func preorderTraversal(root *TreeNode) []int {
-	l := list.New()
-	l.PushFront(root)
+	head := &NodeToVisit{Node: root}
+	tail := &NodeToVisit{}
+	head.Next = tail
+
 	ans := []int{}
-	for l.Len() > 0 {
-		pop := l.Remove(l.Front()).(*TreeNode)
-		ans = append(ans, pop.Val)
-		if pop.Left != nil {
-			l.PushFront(pop.Left)
+
+	for head != nil && head.Node != nil && head != tail {
+		front := head
+		head = head.Next
+
+		ans = append(ans, front.Node.Val)
+		if front.Node.Right != nil {
+			oldHead := head
+			head = &NodeToVisit{Node: front.Node.Right, Next: oldHead}
 		}
-		if pop.Right != nil {
-			l.PushBack(pop.Right)
+
+		if front.Node.Left != nil {
+			oldHead := head
+			head = &NodeToVisit{Node: front.Node.Left, Next: oldHead}
 		}
 	}
 	return ans
