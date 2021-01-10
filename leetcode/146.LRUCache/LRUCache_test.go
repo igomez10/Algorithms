@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"log"
+	"testing"
+)
 
 func TestGetLRUCache(t *testing.T) {
 	obj := Constructor(5)
@@ -51,15 +54,47 @@ func TestPutLRUCache(t *testing.T) {
 
 }
 
+func TestCache(t *testing.T) {
+	input := []string{"get", "put", "get", "put", "put", "get", "get"}
+
+	values := [][]int{{2}, {2, 6}, {1}, {1, 5}, {1, 2}, {1}, {2}}
+
+	expected := []int{-1, 0, -1, 0, 0, 2, 6}
+
+	obj := Constructor(2)
+
+	for i := range input {
+		res := Interpreter(&obj, input[i], values[i])
+		if res != expected[i] {
+			t.Fatal(input[i], values[i], expected[i], res)
+		}
+	}
+
+}
+
 func PrintLRU(t *testing.T, obj LRUCache) {
 
 	t.Log("Keys in cache")
-	for k, v := range obj.cache {
+	for k, v := range obj.Cache {
 		t.Logf("\t %d - %d\n", k, v)
 	}
 
 	t.Log("Entries in MRU")
-	for iterativeHead := obj.MRU; iterativeHead != nil; iterativeHead = iterativeHead.next {
-		t.Logf("\t %d \n", iterativeHead.value)
+	for k, v := range obj.Cache {
+		t.Log(k, v)
 	}
+}
+
+func Interpreter(obj *LRUCache, command string, values []int) int {
+	switch command {
+	case "get":
+		return obj.Get(values[0])
+	case "put":
+		obj.Put(values[0], values[1])
+		return 0
+	default:
+		log.Fatal("Unexpected command", command)
+	}
+
+	return 0
 }

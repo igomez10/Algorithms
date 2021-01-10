@@ -1,59 +1,90 @@
 package main
 
-type SinlgyLinkedListNode struct {
-	value int
-	next  *SinlgyLinkedListNode
+import (
+	"container/heap"
+)
+
+type Node struct {
+	Key      int
+	Value    int
+	Position int // position in the heap
+	LastSeen int // last call
 }
 
 type LRUCache struct {
-	cache    map[int]int
-	capacity int
-	MRU      *SinlgyLinkedListNode
+	Heap        *Nodes
+	Cache       map[int]*Node
+	Capacity    int
+	CurrentCall int
 }
 
 func Constructor(capacity int) LRUCache {
-	newCache := make(map[int]int)
-	cap := capacity
-	newMRU := SinlgyLinkedListNode{}
-	newLRUCache := LRUCache{cache: newCache, capacity: cap, MRU: &newMRU}
+	lru := LRUCache{
+		Heap:        &Nodes{},
+		Cache:       map[int]*Node{},
+		Capacity:    capacity,
+		CurrentCall: 0,
+	}
 
-	return newLRUCache
+	heap.Init(lru.Heap)
+
+	return lru
 }
 
 func (this *LRUCache) Get(key int) int {
-	if val, exist := this.cache[key]; exist {
-		return val
+	node, exist := this.Cache[key]
+	if !exist {
+		return -1
 	}
-	return -1
+	this.CurrentCall++
+	node.LastSeen = this.CurrentCall
+	heap.Fix(this.Heap, node.Position)
+
+	return node.Value
 }
 
 func (this *LRUCache) Put(key int, value int) {
-
-	if this.MRU == nil {
-		this.MRU.value = key
+	this.CurrentCall++
+	if node, exist := this.Cache[key]; exist {
+		node.Value = value
+		node.LastSeen = this.CurrentCall
+		heap.Fix(this.Heap, node.Position)
+		return
 	}
 
-	if this.capacity > len(this.cache) {
-		// only add if we have space
-		this.cache[key] = value
-
-	} else {
-		iterativeHead := this.MRU
-
-		for ; iterativeHead.next != nil; iterativeHead = iterativeHead.next {
-
-		}
-
-		delete(this.cache, iterativeHead.value)
-		this.cache[key] = value
+	if this.Heap.Len() == this.Capacity {
+		removed := heap.Pop(this.Heap)
+		delete(this.Cache, removed.(*Node).Key)
 	}
 
+	node := &Node{Key: key, Value: value, LastSeen: this.CurrentCall}
+	heap.Push(this.Heap, node)
+	this.Cache[node.Key] = node
 }
 
-/**
- * Your LRUCache object will be instantiated and called as such:
- * obj := Constructor(capacity);
- * param_1 := obj.Get(key);
- * obj.Put(key,value);
- */
-func main() {}
+type Nodes []*Node
+
+func (n Nodes) Less(i, j int) bool {
+	return n[i].LastSeen < n[j].LastSeen
+}
+
+func (n Nodes) Swap(i, j int) {
+	n[i].Position, n[j].Position = n[j].Position, n[i].Position
+	n[i], n[j] = n[j], n[i]
+}
+
+func (n Nodes) Len() int {
+	return len(n)
+}
+
+func (n *Nodes) Push(element interface{}) {
+	node := element.(*Node)
+	node.Position = len(*n)
+	*n = append(*n, node)
+}
+
+func (n *Nodes) Pop() interface{} {
+	old := (*n)[len(*n)-1]
+	*n = (*n)[:len(*n)-1]
+	return old
+}
