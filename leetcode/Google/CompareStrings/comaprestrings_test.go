@@ -20,12 +20,6 @@ func TestCompareStrings(t *testing.T) {
 			B:        "aaa,aa",
 			Expected: []int{3, 2},
 		},
-		{
-			Name:     "2",
-			A:        "abcd,aabc,bd",
-			B:        "aaa,aa",
-			Expected: []int{3, 2},
-		},
 	}
 
 	for i := range cases {
