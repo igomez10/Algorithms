@@ -1,62 +1,39 @@
 package main
 
-import "fmt"
-
-func main() {
-	ss := [][]string{
-		[]string{"cbbd", "bb"},
-		[]string{"babad", "aba"},
-		[]string{"a", "a"},
-	}
-
-	for i := range ss {
-		if longestPalindrome(ss[i][0]) != ss[i][1] {
-			fmt.Printf("FAIL %q %q\n", longestPalindrome(ss[i][0]), ss[i][1])
-		} else {
-			fmt.Printf("PASS %q %q\n", longestPalindrome(ss[i][0]), ss[i][1])
-		}
-
-	}
-}
-
 func longestPalindrome(s string) string {
-	if len(s) <= 1 {
-		return s
+	lo := 0
+	hi := 0
+	maxPal := string(s[0])
+
+	for lo < len(s) {
+		c := expand(s, lo, hi)
+		if len(c) > len(maxPal) {
+			maxPal = c
+		}
+
+		hi++
+
+		c = expand(s, lo, hi)
+		if len(c) > len(maxPal) {
+			maxPal = c
+		}
+
+		lo = hi
+
 	}
 
-	x, y := 0, 0
-
-	for i := 0; i < len(s)-1; i++ {
-		if a, b := checkPalindrome(s, i, i); (b - a) >= (y - x) { // odd length palin
-			x, y = a, b
-		}
-		if a, b := checkPalindrome(s, i, i+1); (b - a) >= (y - x) { // even length palin
-			x, y = a, b
-		}
-	}
-
-	return s[x : y+1]
+	return maxPal
 }
 
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
-func checkPalindrome(s string, l, r int) (int, int) {
-	x, y := 0, 0
-
-	for l >= 0 && r < len(s) {
-		if s[l] != s[r] {
-			break
-		}
-
-		x, y = l, r
-		l--
-		r++
+func expand(s string, lo, hi int) string {
+	if lo < 0 || hi >= len(s) || s[lo] != s[hi] {
+		return ""
 	}
 
-	return x, y
+	for lo > 0 && hi < len(s)-1 && s[lo-1] == s[hi+1] {
+		lo--
+		hi++
+	}
+
+	return string(s[lo : hi+1])
 }
