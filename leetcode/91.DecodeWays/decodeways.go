@@ -1,6 +1,40 @@
 package main
 
+import (
+	"strconv"
+)
+
 func numDecodings(s string) int {
+	memo := map[int]int{}
+	return recursiveWithMemo(s, 0, &memo)
+}
+
+func recursiveWithMemo(s string, index int, memo *map[int]int) int {
+	if index == len(s) {
+		return 1
+	}
+
+	if s[index] == '0' {
+		return 0
+	}
+
+	if index == len(s)-1 {
+		return 1
+	}
+
+	if ans, exist := (*memo)[index]; exist {
+		return ans
+	}
+
+	ans := recursiveWithMemo(s, index+1, memo)
+	if num, err := strconv.Atoi(string(s[index : index+2])); err == nil && num <= 26 {
+		ans += recursiveWithMemo(s, index+2, memo)
+	}
+	(*memo)[index] = ans
+	return ans
+}
+
+func numDecodingsIterative(s string) int {
 	dp := make([]int, len(s)+1)
 	dp[0] = 1
 	dp[1] = 1
