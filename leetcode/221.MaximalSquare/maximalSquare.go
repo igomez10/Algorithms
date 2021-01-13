@@ -14,7 +14,7 @@ func maximalSquare(arr [][]byte) int {
 	for i := range arr {
 		for j := range arr[i] {
 			var closeMin byte = 0
-			if arr[i][j] == 1 {
+			if arr[i][j] == '1' {
 				if j > 0 && i > 0 {
 					closeMin = dp[i][j-1]
 					closeMin = min(closeMin, dp[i-1][j])
@@ -28,7 +28,7 @@ func maximalSquare(arr [][]byte) int {
 		}
 	}
 
-	return int(maxWidth)
+	return int(maxWidth * maxWidth)
 }
 
 func min(a, b byte) byte {
