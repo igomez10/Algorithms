@@ -24,6 +24,11 @@ func TestWordBreak(t *testing.T) {
 			dictionary: []string{"cats", "dog", "sand", "and", "cat"},
 			expected:   false,
 		},
+		{
+			word:       "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+			dictionary: []string{"a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa"},
+			expected:   false,
+		},
 	}
 
 	for c := range cases {
