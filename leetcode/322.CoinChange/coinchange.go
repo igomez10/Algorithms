@@ -1,6 +1,8 @@
 package main
 
-func coinChange(coins []int, amount int) int {
+import "math"
+
+func coinChangeBottomUp(coins []int, amount int) int {
 	if amount == 0 {
 		return 0
 	}
@@ -31,4 +33,47 @@ func min(a, b int) int {
 		return a
 	}
 	return b
+}
+
+func coinChangeTopBottom(coins []int, amount int) int {
+	if amount < 1 {
+		return 0
+	}
+	dp := make([]int, amount)
+
+	return coinChangeMemo(coins, amount, &dp)
+
+}
+
+func coinChangeMemo(coins []int, amount int, dp *[]int) int {
+	if amount < 0 {
+		return -1
+	}
+
+	if amount == 0 {
+		return 0
+	}
+
+	if val := (*dp)[amount-1]; val != 0 {
+		return val
+	}
+
+	minAmount := math.MaxInt16
+	for i := range coins {
+		if amount-coins[i] >= 0 {
+			res := coinChangeMemo(coins, amount-coins[i], dp)
+			if res >= 0 && res < minAmount {
+				minAmount = res + 1
+
+			}
+
+		}
+	}
+	if minAmount != math.MaxInt16 {
+		(*dp)[amount-1] = minAmount
+	} else {
+		(*dp)[amount-1] = -1
+	}
+
+	return (*dp)[amount-1]
 }
