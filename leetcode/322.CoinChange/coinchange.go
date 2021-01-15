@@ -1,51 +1,29 @@
 package main
 
-import "sort"
-
 func coinChange(coins []int, amount int) int {
-	sort.Ints(coins)
 	if amount == 0 {
 		return 0
 	}
-	memo := map[int]int{}
-	for i := range coins {
-		memo[coins[i]] = 1
+
+	dp := make([]int, amount+1)
+	for i := range dp {
+		dp[i] = amount + 1
 	}
-	val := coinChangeMemo(coins, amount, &memo)
+	dp[0] = 0
 
-	return val
-}
-
-func coinChangeMemo(coins []int, num int, memo *map[int]int) int {
-	if num < 0 {
-		return -1
-	}
-
-	if val, exist := (*memo)[num]; exist {
-		return val
-	}
-
-	for i := range coins {
-		if num-coins[i] > 0 {
-			if val := coinChangeMemo(coins, num-coins[i], memo); val > 0 {
-
-				if oldMin, exist := (*memo)[num]; exist {
-					(*memo)[num] = min(oldMin, val+1)
-				} else {
-					(*memo)[num] = val + 1
-				}
-
+	for i := range dp {
+		for j := range coins {
+			if i-coins[j] >= 0 {
+				dp[i] = min(dp[i], dp[i-coins[j]]+1)
 			}
-		} else {
-			break
 		}
 	}
 
-	if (*memo)[num] == 0 {
-		(*memo)[num] = -1
+	if dp[amount] > amount {
+		return -1
 	}
 
-	return (*memo)[num]
+	return dp[amount]
 }
 
 func min(a, b int) int {
