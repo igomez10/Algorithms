@@ -1,37 +1,41 @@
 package main
 
 func minDistance(word1 string, word2 string) int {
-	memo := make([][]int, len(word1)+1)
-	for i := range memo {
-		memo[i] = make([]int, len(word2)+1)
+	if word1 == word2 {
+		return 0
 	}
 
-	return minDistanceMemo(word1, word2, memo)
-}
+	dp := make([][]int, len(word1)+1)
+	for i := range dp {
+		dp[i] = make([]int, len(word2)+1)
+	}
 
-func minDistanceMemo(word1, word2 string, memo [][]int) int {
 	if word1 == "" || word2 == "" {
 		return len(word2) + len(word1)
 	}
 
-	if memo[len(word1)][len(word2)] > 0 {
-		return memo[len(word1)][len(word2)]
+	for i := range dp {
+		dp[i][0] = i
+	}
+	for i := range dp[0] {
+		dp[0][i] = i
 	}
 
-	if word1[0] == word2[0] {
-		ans := minDistanceMemo(word1[1:], word2[1:], memo)
-		memo[len(word1)][len(word2)] = ans
-		return ans
+	for i := 1; i < len(dp); i++ {
+		for j := 1; j < len(dp[i]); j++ {
+			if word1[i-1] == word2[j-1] {
+				dp[i][j] = dp[i-1][j-1]
+			} else {
+				ans1 := dp[i-1][j] + 1
+				ans2 := dp[i][j-1] + 1
+				ans3 := dp[i-1][j-1] + 1
+				ans := min(ans1, ans2, ans3)
+				dp[i][j] = ans
+			}
+		}
 	}
 
-	ans1 := 1 + minDistanceMemo(word1[1:], word2, memo)
-	ans2 := 1 + minDistanceMemo(word1, word2[1:], memo)
-	ans3 := 1 + minDistanceMemo(word1[1:], word2[1:], memo)
-
-	ans := min(ans1, ans2, ans3)
-	memo[len(word1)][len(word2)] = ans
-
-	return memo[len(word1)][len(word2)]
+	return dp[len(word1)][len(word2)]
 }
 
 func min(args ...int) int {
@@ -43,3 +47,16 @@ func min(args ...int) int {
 	}
 	return smallest
 }
+
+// if word1[0] == word2[0] {
+// 	ans := minDistanceMemo(word1[1:], word2[1:], dp)
+// 	dp[len(word1)][len(word2)] = ans
+// 	return ans
+// }
+
+// ans1 := 1 + minDistanceMemo(word1[1:], word2, dp)
+// ans2 := 1 + minDistanceMemo(word1, word2[1:], dp)
+// ans3 := 1 + minDistanceMemo(word1[1:], word2[1:], dp)
+
+// ans := min(ans1, ans2, ans3)
+// dp[len(word1)][len(word2)] = ans

@@ -23,6 +23,21 @@ func TestEditDistance(t *testing.T) {
 			target:   "execution",
 			expected: 5,
 		},
+		{
+			source:   "a",
+			target:   "a",
+			expected: 0,
+		},
+		{
+			source:   "a",
+			target:   "b",
+			expected: 1,
+		},
+		{
+			source:   "plasma",
+			target:   "altruism",
+			expected: 6,
+		},
 	}
 
 	for i := range cases {
