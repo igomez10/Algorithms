@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 func minDifficulty(jobs []int, d int) int {
 	if len(jobs) < d {
 		return -1
@@ -24,7 +26,7 @@ func minDifficultyMemo(jobs []int, daysLeft, start int, memo [][]int) int {
 		return memo[daysLeft][start]
 	}
 
-	minimum := 0
+	minimum := math.MaxInt32
 	currentMax := jobs[start]
 	for i := start + 1; i <= len(jobs)-daysLeft; i++ {
 		if jobs[i-1] > currentMax {
@@ -32,11 +34,7 @@ func minDifficultyMemo(jobs []int, daysLeft, start int, memo [][]int) int {
 		}
 
 		current := currentMax + minDifficultyMemo(jobs, daysLeft-1, i, memo)
-		if minimum == 0 {
-			minimum = current
-		} else {
-			minimum = min(minimum, current)
-		}
+		minimum = min(minimum, current)
 	}
 
 	memo[daysLeft][start] = minimum
