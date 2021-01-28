@@ -8,24 +8,20 @@ func minDifficulty(jobs []int, d int) int {
 	for i := range memo {
 		memo[i] = make([]int, len(jobs))
 	}
-	val := numPartitions(jobs, d-1, 0, memo)
+	val := minDifficultyMemo(jobs, d-1, 0, memo)
 
 	return val
 }
 
-func numPartitions(jobs []int, daysLeft, start int, memo [][]int) int {
-	if start >= len(jobs) {
-		return -1
-	}
-
-	if val := memo[daysLeft][start]; val > 0 {
-		return val
+func minDifficultyMemo(jobs []int, daysLeft, start int, memo [][]int) int {
+	if memo[daysLeft][start] > 0 {
+		return memo[daysLeft][start]
 	}
 
 	if daysLeft == 0 {
-		mostDifficult := max(jobs[start:]...)
-		memo[daysLeft][start] = mostDifficult
-		return mostDifficult
+		biggest := max(jobs[start:]...)
+		memo[daysLeft][start] = biggest
+		return memo[daysLeft][start]
 	}
 
 	minimum := 0
@@ -34,7 +30,8 @@ func numPartitions(jobs []int, daysLeft, start int, memo [][]int) int {
 		if jobs[i-1] > currentMax {
 			currentMax = jobs[i-1]
 		}
-		current := currentMax + numPartitions(jobs, daysLeft-1, i, memo)
+
+		current := currentMax + minDifficultyMemo(jobs, daysLeft-1, i, memo)
 		if minimum == 0 {
 			minimum = current
 		} else {
@@ -44,7 +41,7 @@ func numPartitions(jobs []int, daysLeft, start int, memo [][]int) int {
 
 	memo[daysLeft][start] = minimum
 
-	return minimum
+	return memo[daysLeft][start]
 }
 
 func min(args ...int) int {
