@@ -17,7 +17,7 @@ func FindBusiestPeriod(data [][]int) int {
 				biggestNumberOfPeople = currentNumberOfPeople
 			}
 
-			currentNumberOfPeople = 0
+			// currentNumberOfPeople = 0
 			currentTimestamp = data[i][0]
 
 		}
@@ -27,6 +27,10 @@ func FindBusiestPeriod(data [][]int) int {
 		} else {
 			currentNumberOfPeople -= data[i][1]
 		}
+	}
+
+	if currentNumberOfPeople > biggestNumberOfPeople {
+		busiestTimestamp = currentTimestamp
 	}
 
 	return busiestTimestamp
