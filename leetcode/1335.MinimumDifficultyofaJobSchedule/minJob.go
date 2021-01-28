@@ -29,8 +29,12 @@ func numPartitions(jobs []int, daysLeft, start int, memo [][]int) int {
 	}
 
 	minimum := 0
-	for i := start + 1; i < len(jobs)-daysLeft+1; i++ {
-		current := max(jobs[start:i]...) + numPartitions(jobs, daysLeft-1, i, memo)
+	currentMax := jobs[start]
+	for i := start + 1; i <= len(jobs)-daysLeft; i++ {
+		if jobs[i-1] > currentMax {
+			currentMax = jobs[i-1]
+		}
+		current := currentMax + numPartitions(jobs, daysLeft-1, i, memo)
 		if minimum == 0 {
 			minimum = current
 		} else {
