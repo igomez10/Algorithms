@@ -21,11 +21,11 @@ func minDifficulty(jobs []int, d int) int {
 }
 
 func minDifficultyMemo(jobs []int, daysLeft, start int, memo [][]int) int {
-	if daysLeft == 0 && start == len(jobs) {
-		return 0
-	}
-
 	if daysLeft == 0 {
+		if start == len(jobs) {
+			return 0
+		}
+
 		return math.MaxInt32
 	}
 
@@ -40,6 +40,7 @@ func minDifficultyMemo(jobs []int, daysLeft, start int, memo [][]int) int {
 		newMin := currentMax + minDifficultyMemo(jobs, daysLeft-1, i+1, memo)
 		currentMin = min(currentMin, newMin)
 	}
+
 	memo[daysLeft][start] = currentMin
 	return memo[daysLeft][start]
 }
