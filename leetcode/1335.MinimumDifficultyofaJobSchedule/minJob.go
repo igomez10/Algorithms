@@ -6,39 +6,41 @@ func minDifficulty(jobs []int, d int) int {
 	if len(jobs) < d {
 		return -1
 	}
-	memo := make([][]int, d)
+	memo := make([][]int, d+1)
 	for i := range memo {
-		memo[i] = make([]int, len(jobs))
+		memo[i] = make([]int, len(jobs)+1)
+		for j := range memo[i] {
+			memo[i][j] = -1
+		}
 	}
-	val := minDifficultyMemo(jobs, d-1, 0, memo)
+	val := minDifficultyMemo(jobs, d, 0, memo)
 
 	return val
 }
 
 func minDifficultyMemo(jobs []int, daysLeft, start int, memo [][]int) int {
-	if memo[daysLeft][start] > 0 {
+	if daysLeft == 0 && start == len(jobs) {
+		return 0
+	}
+
+	if daysLeft == 0 || start == len(jobs) {
+		return math.MaxInt32
+	}
+
+	if memo[daysLeft][start] != -1 {
 		return memo[daysLeft][start]
 	}
 
-	if daysLeft == 0 {
-		biggest := max(jobs[start:]...)
-		memo[daysLeft][start] = biggest
-		return memo[daysLeft][start]
-	}
-
-	minimum := math.MaxInt32
 	currentMax := jobs[start]
-	for i := start + 1; i <= len(jobs)-daysLeft; i++ {
-		if jobs[i-1] > currentMax {
-			currentMax = jobs[i-1]
+	currentMin := math.MaxInt32
+	for i := start; i < len(jobs); i++ {
+		currentMax = max(currentMax, jobs[i])
+		tmp := minDifficultyMemo(jobs, daysLeft-1, i+1, memo)
+		if tmp != math.MaxInt32 {
+			currentMin = min(currentMin, tmp+currentMax)
 		}
-
-		current := currentMax + minDifficultyMemo(jobs, daysLeft-1, i, memo)
-		minimum = min(minimum, current)
 	}
-
-	memo[daysLeft][start] = minimum
-
+	memo[daysLeft][start] = currentMin
 	return memo[daysLeft][start]
 }
 
