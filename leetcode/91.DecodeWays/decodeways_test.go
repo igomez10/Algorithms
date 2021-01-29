@@ -12,7 +12,8 @@ func TestDecodeWays(t *testing.T) {
 
 	for k, v := range cases {
 		t.Run(k, func(t *testing.T) {
-			if numDecodings(k) != v {
+			res := numDecodings(k)
+			if res != v {
 				t.Error("got", numDecodings(k), "expected", v)
 			}
 		})

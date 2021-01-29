@@ -5,8 +5,9 @@ import (
 )
 
 func numDecodings(s string) int {
-	memo := map[int]int{}
-	return recursiveWithMemo(s, 0, &memo)
+	// memo := map[int]int{}
+	memo := make([]int, len(s)+1)
+	return DecodeMemo(s, memo)
 }
 
 func recursiveWithMemo(s string, index int, memo *map[int]int) int {
@@ -32,6 +33,35 @@ func recursiveWithMemo(s string, index int, memo *map[int]int) int {
 	}
 	(*memo)[index] = ans
 	return ans
+}
+
+func DecodeMemo(s string, memo []int) int {
+	if s == "" {
+		return 1
+	}
+
+	if memo[len(s)] > 0 {
+		return memo[len(s)]
+	}
+
+	if s[0] == '0' {
+		return 0
+	}
+
+	ans := 0
+	ans += DecodeMemo(s[1:], memo)
+	if len(s) > 1 {
+		firstTwo := s[:2]
+		val, _ := strconv.Atoi(firstTwo)
+		if val >= 10 && val <= 26 {
+			ans += DecodeMemo(s[2:], memo)
+		} else {
+		}
+	}
+
+	memo[len(s)] = ans
+
+	return memo[len(s)]
 }
 
 func numDecodingsIterative(s string) int {
