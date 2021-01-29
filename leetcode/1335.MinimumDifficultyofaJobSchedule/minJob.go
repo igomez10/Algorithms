@@ -1,6 +1,8 @@
 package main
 
-import "math"
+import (
+	"math"
+)
 
 func minDifficulty(jobs []int, d int) int {
 	if len(jobs) < d {
@@ -23,7 +25,7 @@ func minDifficultyMemo(jobs []int, daysLeft, start int, memo [][]int) int {
 		return 0
 	}
 
-	if daysLeft == 0 || start == len(jobs) {
+	if daysLeft == 0 {
 		return math.MaxInt32
 	}
 
@@ -33,12 +35,10 @@ func minDifficultyMemo(jobs []int, daysLeft, start int, memo [][]int) int {
 
 	currentMax := jobs[start]
 	currentMin := math.MaxInt32
-	for i := start; i < len(jobs); i++ {
+	for i := start; i <= len(jobs)-daysLeft; i++ {
 		currentMax = max(currentMax, jobs[i])
-		tmp := minDifficultyMemo(jobs, daysLeft-1, i+1, memo)
-		if tmp != math.MaxInt32 {
-			currentMin = min(currentMin, tmp+currentMax)
-		}
+		newMin := currentMax + minDifficultyMemo(jobs, daysLeft-1, i+1, memo)
+		currentMin = min(currentMin, newMin)
 	}
 	memo[daysLeft][start] = currentMin
 	return memo[daysLeft][start]
