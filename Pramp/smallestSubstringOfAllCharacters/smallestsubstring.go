@@ -6,42 +6,48 @@ import (
 )
 
 func GetShortestUniqueSubstring(arr []string, str string) string {
-	dict := map[string]bool{}
-	currentCount := map[string]int{}
-
-	for i := range arr {
-		dict[string(arr[i])] = true
-	}
-
-	lo := 0
-	hi := 0
 	shortest := math.MaxInt32
 	shortestString := ""
-	// currentCount[string(str[0])] = 1
+	// create a map with the important characters to access them in O(1)
+	wanted := map[string]bool{}
+	for i := range arr {
+		wanted[arr[i]] = true
+	}
+
+	// create map of current unique chars in sliding window lo:hi
+	uniques := map[string]int{}
+
+	// start a sliding window with lo:hi. Continue until lo == len(str)
+	lo := 0
+	hi := 0
 	for lo < len(str) {
-		if len(currentCount) != len(dict) && hi < len(str) {
-			newChar := string(str[hi])
-			if dict[newChar] {
-				currentCount[newChar]++
+
+		// if we have missing characters in the current sliding window, extend upper boundary
+		if len(uniques) < len(wanted) && hi < len(str) {
+			if wanted[string(str[hi])] {
+				uniques[string(str[hi])]++ // add new character to unique count
 			}
 			hi++
 		} else {
-			if len(currentCount) == len(dict) && shortest > hi-lo {
-				shortest = hi - lo
-				shortestString = str[lo:hi]
-			}
-			oldChar := string(str[lo])
-			if dict[oldChar] {
-				currentCount[oldChar]--
-			}
-
-			if currentCount[oldChar] == 0 {
-				delete(currentCount, oldChar)
+			// else, we have all the unique characters in the current sliding window, try
+			// to increase lo to reduce the length of the sliding window
+			if wanted[string(str[lo])] {
+				uniques[string(str[lo])]-- // substract old character from unique count
+				if uniques[string(str[lo])] == 0 {
+					delete(uniques, string(str[lo])) // if reaches 0, remove from unique map
+				}
 			}
 			lo++
 		}
-	}
 
+		if len(uniques) == len(wanted) {
+			if hi-lo < shortest {
+				shortest = hi - lo
+				shortestString = str[lo:hi]
+			}
+		}
+
+	}
 	return shortestString
 }
 
