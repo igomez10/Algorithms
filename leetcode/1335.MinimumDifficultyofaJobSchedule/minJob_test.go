@@ -40,7 +40,7 @@ func TestMinJob(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(fmt.Sprintf("%+v  days: %d expected %d", c.jobs, c.days, c.expected), func(t *testing.T) {
-			if val := minDifficulty(c.jobs, c.days); val != c.expected {
+			if val := minDifficultyBottomUP(c.jobs, c.days); val != c.expected {
 				t.Errorf("expected %d got %d", c.expected, val)
 			}
 		})
