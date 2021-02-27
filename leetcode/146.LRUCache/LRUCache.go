@@ -1,90 +1,102 @@
 package main
 
-import (
-	"container/heap"
-)
+import "fmt"
 
-type Node struct {
-	Key      int
-	Value    int
-	Position int // position in the heap
-	LastSeen int // last call
+type ListNode struct {
+	Key  int
+	Val  int
+	Next *ListNode
+	Prev *ListNode
 }
 
 type LRUCache struct {
-	Heap        *Nodes
-	Cache       map[int]*Node
-	Capacity    int
-	CurrentCall int
+	dict     map[int]*ListNode
+	head     *ListNode
+	tail     *ListNode
+	capacity int
 }
 
 func Constructor(capacity int) LRUCache {
-	lru := LRUCache{
-		Heap:        &Nodes{},
-		Cache:       map[int]*Node{},
-		Capacity:    capacity,
-		CurrentCall: 0,
+	head := &ListNode{}
+	tail := &ListNode{}
+
+	head.Next = tail
+	tail.Prev = head
+
+	cache := LRUCache{
+		capacity: capacity,
+		dict:     map[int]*ListNode{},
+		head:     head,
+		tail:     tail,
 	}
 
-	heap.Init(lru.Heap)
-
-	return lru
+	return cache
 }
 
 func (this *LRUCache) Get(key int) int {
-	node, exist := this.Cache[key]
+	// fmt.Println(this.dict)
+	node, exist := this.dict[key]
 	if !exist {
 		return -1
 	}
-	this.CurrentCall++
-	node.LastSeen = this.CurrentCall
-	heap.Fix(this.Heap, node.Position)
 
-	return node.Value
+	this.MoveToHead(key)
+
+	return node.Val
 }
 
 func (this *LRUCache) Put(key int, value int) {
-	this.CurrentCall++
-	if node, exist := this.Cache[key]; exist {
-		node.Value = value
-		node.LastSeen = this.CurrentCall
-		heap.Fix(this.Heap, node.Position)
+	// fmt.Println(this.dict)
+	node, exist := this.dict[key]
+	if exist {
+		node.Val = value // overwrite value
+		err := this.MoveToHead(key)
+		if err != nil {
+			// fmt.Println(err)
+		}
 		return
 	}
 
-	if this.Heap.Len() == this.Capacity {
-		removed := heap.Pop(this.Heap)
-		delete(this.Cache, removed.(*Node).Key)
+	if len(this.dict) >= this.capacity {
+		this.DeleteOldest()
 	}
 
-	node := &Node{Key: key, Value: value, LastSeen: this.CurrentCall}
-	heap.Push(this.Heap, node)
-	this.Cache[node.Key] = node
+	newNode := &ListNode{
+		Key:  key,
+		Val:  value,
+		Next: this.head.Next,
+		Prev: this.head,
+	}
+
+	this.dict[key] = newNode
+	this.head.Next.Prev = newNode
+	this.head.Next = newNode
 }
 
-type Nodes []*Node
+func (this *LRUCache) MoveToHead(key int) error {
+	// fmt.Println("moving", key, "to head")
+	node, exist := this.dict[key]
+	if !exist {
+		return fmt.Errorf("error moving key to head invalid key %q", key)
+	}
 
-func (n Nodes) Less(i, j int) bool {
-	return n[i].LastSeen < n[j].LastSeen
+	//remove
+	node.Next.Prev = node.Prev
+	node.Prev.Next = node.Next
+
+	//move to head
+	node.Prev = this.head
+	node.Next = this.head.Next
+
+	this.head.Next.Prev = node
+	this.head.Next = node
+	return nil
 }
 
-func (n Nodes) Swap(i, j int) {
-	n[i].Position, n[j].Position = n[j].Position, n[i].Position
-	n[i], n[j] = n[j], n[i]
-}
+func (this *LRUCache) DeleteOldest() {
+	oldest := this.tail.Prev
+	delete(this.dict, oldest.Key)
 
-func (n Nodes) Len() int {
-	return len(n)
-}
-
-func (n *Nodes) Push(element interface{}) {
-	node := element.(*Node)
-	node.Position = len(*n)
-	*n = append(*n, node)
-}
-
-func (n *Nodes) Pop() interface{} {
-	old := (*n)[len(*n)-1]
-	*n = (*n)[:len(*n)-1]
-	return old
+	oldest.Prev.Next = oldest.Next
+	oldest.Next.Prev = oldest.Prev
 }

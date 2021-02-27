@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"strconv"
 	"testing"
 )
 
@@ -51,23 +53,42 @@ func TestPutLRUCache(t *testing.T) {
 		t.Errorf("Error retrieving expelled value, expected %d but got %d", -1, obj.Get(1))
 		PrintLRU(t, obj)
 	}
-
 }
 
 func TestCache(t *testing.T) {
-	input := []string{"get", "put", "get", "put", "put", "get", "get"}
+	type TestCase struct {
+		input    []string
+		capacity int
+		values   [][]int
+		expected []int
+	}
 
-	values := [][]int{{2}, {2, 6}, {1}, {1, 5}, {1, 2}, {1}, {2}}
+	cases := []TestCase{
+		// {
+		// 	input:    []string{"get", "put", "get", "put", "put", "get", "get"},
+		// 	values:   [][]int{{2}, {2, 6}, {1}, {1, 5}, {1, 2}, {1}, {2}},
+		// 	expected: []int{-1, 0, -1, 0, 0, 2, 6},
+		// 	capacity: 2,
+		// },
+		{
+			input:    []string{"put", "put", "get", "put", "get", "put", "get", "get", "get"},
+			values:   [][]int{{1, 1}, {2, 2}, {1}, {3, 3}, {2}, {4, 4}, {1}, {3}, {4}},
+			expected: []int{0, 0, 1, 0, -1, 0, -1, 3, 4},
+			capacity: 2,
+		},
+	}
 
-	expected := []int{-1, 0, -1, 0, 0, 2, 6}
-
-	obj := Constructor(2)
-
-	for i := range input {
-		res := Interpreter(&obj, input[i], values[i])
-		if res != expected[i] {
-			t.Fatal(input[i], values[i], expected[i], res)
-		}
+	for i, c := range cases {
+		t.Run(strconv.Itoa(i), func(t *testing.T) {
+			obj := Constructor(c.capacity)
+			for in := range c.input {
+				fmt.Println("running", c.input[in], c.values[in])
+				res := Interpreter(&obj, c.input[in], c.values[in])
+				if res != c.expected[in] {
+					t.Fatal(c.input[in], c.values[in], "expected", c.expected[in], "got", res)
+				}
+			}
+		})
 	}
 
 }
@@ -75,12 +96,12 @@ func TestCache(t *testing.T) {
 func PrintLRU(t *testing.T, obj LRUCache) {
 
 	t.Log("Keys in cache")
-	for k, v := range obj.Cache {
-		t.Logf("\t %d - %d\n", k, v)
+	for k, v := range obj.dict {
+		t.Logf("\t %d - %+v\n", k, v)
 	}
 
 	t.Log("Entries in MRU")
-	for k, v := range obj.Cache {
+	for k, v := range obj.dict {
 		t.Log(k, v)
 	}
 }
