@@ -1,40 +1,45 @@
 package main
 
 func canFinish(numCourses int, prerequisites [][]int) bool {
-	graph := buildGraph(numCourses, prerequisites)
-	return !DetectCycle(graph)
+	matrix := buildMatrix(numCourses, prerequisites)
+	return !DetectCycles(matrix)
 }
 
-func DetectCycle(graph [][]bool) bool {
-	visited := make([]bool, len(graph))
-	stack := make([]bool, len(graph))
+func DetectCycles(matrix [][]bool) bool {
+	visited := make([]bool, len(matrix))
+	stack := make([]bool, len(matrix))
 
-	for currOrigin := 0; currOrigin < len(graph); currOrigin++ {
-		if detectCycleUtil(currOrigin, graph, &visited, &stack) {
+	for origin := range matrix {
+		stack[origin] = true
+		if hasCycles(origin, matrix, &visited, &stack) {
 			return true
 		}
+		stack[origin] = false
 	}
 	return false
 }
 
-func detectCycleUtil(origin int, graph [][]bool, visited, stack *[]bool) bool {
+func hasCycles(origin int, matrix [][]bool, visited, stack *[]bool) bool {
 	(*visited)[origin] = true
-	(*stack)[origin] = true
-	defer func() { (*stack)[origin] = false }()
-	for target, hasConnection := range graph[origin] {
+	for target, hasConnection := range matrix[origin] {
 		if !hasConnection {
 			continue
 		}
-		if (*stack)[target] || (!(*visited)[target] && detectCycleUtil(target, graph, visited, stack)) {
+
+		if (*stack)[target] {
 			return true
 		}
 
+		(*stack)[target] = true
+		if !(*visited)[target] && hasCycles(target, matrix, visited, stack) {
+			return true
+		}
+		(*stack)[target] = false
 	}
-
 	return false
 }
 
-func buildGraph(vertices int, edges [][]int) [][]bool {
+func buildMatrix(vertices int, edges [][]int) [][]bool {
 	matrix := make([][]bool, vertices)
 	for i := range matrix {
 		matrix[i] = make([]bool, vertices)
@@ -43,10 +48,8 @@ func buildGraph(vertices int, edges [][]int) [][]bool {
 	for _, e := range edges {
 		origin := e[0]
 		target := e[1]
-
 		matrix[origin][target] = true
 
 	}
-
 	return matrix
 }
