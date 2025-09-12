@@ -33,7 +33,7 @@ func TestKosaraju(t *testing.T) {
 		t.Run(strconv.Itoa(idx), func(t *testing.T) {
 			ans := Kosaraju(c.numNodes, c.graph)
 			if len(ans) != len(c.expected) {
-				t.Fatal("expected %d connected components, got %d", len(c.expected), len(ans))
+				t.Fatalf("expected %d connected components, got %d", len(c.expected), len(ans))
 			}
 
 			for i := range ans {

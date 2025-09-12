@@ -18,6 +18,7 @@ func Kosaraju(numNodes int, edges [][]int) [][]int {
 		u := L.Remove(L.Front()).(int)
 		Assign(u, u, components)
 	}
+	return [][]int{}
 }
 
 func Assign(u, root int, components map[int]int) {
