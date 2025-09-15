@@ -1,3 +1,3 @@
 module github.com/igomez10/testingGo
 
-go 1.14
+go 1.25
