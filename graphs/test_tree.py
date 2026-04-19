@@ -58,6 +58,27 @@ def preorder_traversal(root: Node) -> list[int]:
     return res
 
 
+def postorder_traversal(root: Node) -> list[int]:
+    res = []
+    queue = deque()
+    queue.append(root)
+    stack = deque()
+    while queue:
+        current = queue.pop()
+        stack.append(current)
+
+        if current.left:
+            queue.append(current.left)
+        if current.right:
+            queue.append(current.right)
+
+    while stack:
+        current = stack.pop()
+        res.append(current.value)
+
+    return res
+
+
 def test_inorder():
     tree = build_sample_tree()
     assert inorder_traversal(tree) == [0, 1, 2, 3, 4, 5, 6]
@@ -66,3 +87,8 @@ def test_inorder():
 def test_preorder():
     tree = build_sample_tree()
     assert preorder_traversal(root=tree) == [0, 1, 3, 4, 2, 5, 6]
+
+
+def test_postorder():
+    tree = build_sample_tree()
+    assert postorder_traversal(root=tree) == [3, 4, 1, 5, 6, 2, 0]
